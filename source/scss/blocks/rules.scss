@@ -219,6 +219,22 @@ $timeOffset: 0.2s;
   bottom: 6rem;
   right: 5.6rem;
 
+  animation-name: show-button-go-text;
+  animation-duration: 0.65s;
+  animation-delay: 1.85s;
+  animation-fill-mode: backwards;
+
+  &::before {
+    left: auto;
+    right: 0;
+    transform: translate(0, -50%);
+
+    animation-name: show-button-go;
+    animation-duration: 0.45s;
+    animation-delay: 1.5s;
+    animation-fill-mode: backwards;
+  }
+
   @media (min-width: $stop-scaling) {
     bottom: 60px;
     right: 56px;
@@ -265,3 +281,25 @@ $timeOffset: 0.2s;
     opacity: 0;
   }
 }
+
+@keyframes show-button-go {
+  from {
+    opacity: 0;
+    width: 3.5 * 2rem ;
+  }
+  1% {
+    opacity: 1;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes show-button-go-text {
+  from {
+  color: transparent;
+  }
+}
+
+
