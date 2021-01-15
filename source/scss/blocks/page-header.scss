@@ -1,3 +1,5 @@
+
+
 .page-header {
   position: fixed;
   top: 0;
@@ -35,6 +37,18 @@
   padding: 1rem 0;
   width: 10rem;
   color: $c-light;
+
+  transform: translateX(-50%);
+  opacity: 0;
+
+  transition-property: opacity, transform;
+  transition-duration: $logoAnimationSeconds;
+  transition-timing-function: $firstScreenMacroTimingFunction;
+
+  .page-loaded & {
+    transform: translateX(0);
+    opacity: 1;
+  }
 
   @media (min-width: $stop-scaling) {
     top: -5px;
@@ -130,6 +144,16 @@
 .page-header__nav {
   display: flex;
   align-items: center;
+
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: $navigationAnimationSeconds;
+  transition-timing-function: $firstScreenMacroTimingFunction;
+  transition-delay: $navigationOffsetSeconds;
+
+  .page-loaded & {
+    opacity: 1;
+  }
 
   @media (max-width: $tablet) and (orientation: portrait) {
     position: fixed;
@@ -242,15 +266,19 @@
     color: inherit;
     padding: 0 0.5em 0.5em;
 
+    transition: color 0.35s ;
+
     &::after {
       content: "";
       position: absolute;
       bottom: 0;
-      width: 100%;
+      width: 0;
       height: 2px;
       background-color: $c-light;
-      display: none;
-      left: 0;
+      display: block;
+      right: 0;
+
+      transition: width 0.35s;
 
       @media (max-width: $tablet) and (orientation: portrait) {
         left: 0;
@@ -265,9 +293,11 @@
       }
     }
 
-    &.active {
+    .page-loaded &.active {
       &::after {
-        display: block;
+        left: 0;
+        width: 100%;
+        transition-delay: $navigationOffsetSeconds * 1.2;
       }
     }
 
@@ -279,6 +309,8 @@
       &::after {
         opacity: 1;
         background-color: $c-purple;
+        width: 100%;
+        left: 0;
       }
     }
   }
