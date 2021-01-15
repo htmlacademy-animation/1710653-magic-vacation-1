@@ -8,6 +8,7 @@ export default class FullPageScroll {
     this.menuElements = document.querySelectorAll(`.page-header__menu .js-menu-link`);
 
     this.activeScreen = 0;
+    this.previouslyScreen = 0;
     this.onScrollHandler = this.onScroll.bind(this);
     this.onUrlHashChengedHandler = this.onUrlHashChanged.bind(this);
   }
@@ -29,6 +30,7 @@ export default class FullPageScroll {
 
   onUrlHashChanged() {
     const newIndex = Array.from(this.screenElements).findIndex((screen) => location.hash.slice(1) === screen.id);
+    this.previouslyScreen = this.activeScreen;
     this.activeScreen = (newIndex < 0) ? 0 : newIndex;
     this.changePageDisplay();
   }
@@ -40,12 +42,35 @@ export default class FullPageScroll {
   }
 
   changeVisibilityDisplay() {
-    this.screenElements.forEach((screen) => {
-      screen.classList.add(`screen--hidden`);
-      screen.classList.remove(`active`);
-    });
-    this.screenElements[this.activeScreen].classList.remove(`screen--hidden`);
-    this.screenElements[this.activeScreen].classList.add(`active`);
+    const activeScreen = this.screenElements[this.activeScreen];
+    const previouslyScreen = this.screenElements[this.previouslyScreen];
+
+    const screenBackground = previouslyScreen.querySelector(`.screen__background`);
+
+    const updateScreens = () => {
+      this.screenElements.forEach((screen) => {
+        screen.classList.add(`screen--hidden`);
+        screen.classList.remove(`active`);
+      });
+
+      activeScreen.classList.remove(`screen--hidden`);
+
+      setTimeout(() => {
+        activeScreen.classList.add(`active`);
+      }, 100);
+    };
+
+    if (screenBackground) {
+      previouslyScreen.classList.add(`has-hiding`);
+
+      screenBackground.addEventListener(`transitionend`, () => {
+        previouslyScreen.classList.remove(`has-hiding`);
+
+        updateScreens();
+      });
+    } else {
+      updateScreens();
+    }
   }
 
   changeActiveMenuItem() {
@@ -69,6 +94,8 @@ export default class FullPageScroll {
   }
 
   reCalculateActiveScreenPosition(delta) {
+    this.previouslyScreen = this.activeScreen;
+
     if (delta > 0) {
       this.activeScreen = Math.min(this.screenElements.length - 1, ++this.activeScreen);
     } else {

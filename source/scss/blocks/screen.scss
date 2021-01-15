@@ -1,3 +1,5 @@
+$screenBackgroundAnimationSeconds: 0.25s;
+
 .screen {
   position: relative;
   display: flex;
@@ -288,6 +290,26 @@
   }
 }
 
+.screen__background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  background-color: $c-dark;
+
+  transform: translateY(100%);
+
+  transition-property: transform;
+  transition-duration: $screenBackgroundAnimationSeconds;
+  transition-timing-function: ease-in;
+
+  .screen.has-hiding & {
+    transform: translateY(0);
+  }
+}
+
 .screen--story {
   background-color: $c-dark;
   background-image: url("../img/slide1.jpg"), url("../img/slide2.jpg"), url("../img/slide3.jpg"), url("../img/slide4.jpg");
@@ -302,7 +324,6 @@
 }
 
 .screen--prizes {
-  background-color: $c-dark;
 }
 
 .screen--game {
