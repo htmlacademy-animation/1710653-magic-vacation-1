@@ -29,24 +29,13 @@
   }
 }
 
-.form__field {
+.form__field-container {
   flex: none;
   margin-right: 3rem;
-  padding: 0 5.6rem;
-  height: 6rem;
-  width: calc(100% - 21rem);
-  text-transform: uppercase;
-  font: inherit;
-  font-size: 2.4rem;
-  line-height: 1.2;
-  color: $c-dark;
-  border: 0;
-  border-radius: 3rem;
-  outline: none;
+  display: flex;
+  justify-content: flex-end;
 
-  &:focus {
-    border: 1px solid $c-purple;
-  }
+  width: calc(100% - 21rem);
 
   @media (min-width: $stop-scaling) {
     margin-right: 30px;
@@ -75,6 +64,65 @@
     width: calc(100% - 5rem);
     height: 4rem;
     font-size: 1.6rem;
+  }
+}
+
+.form__field {
+  padding: 0 5.6rem;
+  width: 0;
+  height: 6rem;
+
+  text-transform: uppercase;
+  font: inherit;
+  font-size: 2.4rem;
+  line-height: 1.2;
+  color: transparent;
+  border: 1px solid transparent;
+  border-radius: 3rem;
+  outline: none;
+
+  transition-property: width, opacity, padding, color;
+  transition-duration: 1.5s, 0.2s, 1.5s, 0.45s;
+  transition-delay: 0s, 0s, 0s, 0.8s;
+  transition-timing-function: ease-in-out, ease-in-out, ease-in-out, ease-in;
+  opacity: 0;
+
+  &:focus {
+    border: 1px solid $c-purple;
+  }
+
+  .screen:not(.active) &{
+    padding: 0 3rem;
+  }
+
+  .screen.active &{
+    width: 100%;
+    opacity: 1;
+    color: $c-dark;
+  }
+
+  @media (min-width: $stop-scaling) {
+    padding: 0 56px;
+    height: 60px;
+    font-size: 24px;
+    border-radius: 30px;
+  }
+
+  @media (orientation: portrait) {
+    padding: 0 2.5rem;
+    height: 4rem;
+    font-size: 1.6rem;
+  }
+
+  @media (max-width: $mobile) and (orientation: landscape) {
+    padding: 0 2.5rem;
+    height: 4rem;
+    font-size: 1.6rem;
+  }
+
+  &::placeholder {
+    opacity: .5;
+    color: currentColor;
   }
 }
 
