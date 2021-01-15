@@ -117,12 +117,16 @@
   }
 }
 
+$timeOffset: 0.2s;
+
 .rules__item {
   position: relative;
   margin: 0 0 6.2rem;
   padding-top: 0.6rem;
   padding-left: 6.5rem;
   break-inside: avoid;
+
+
 
   @media (min-width: $stop-scaling) {
     margin: 0 0 62px;
@@ -144,6 +148,17 @@
     font-size: 1.2rem;
   }
 
+  @for $i from 1 through 4 {
+    &:nth-child(#{$i}) {
+      animation-delay: $i * $timeOffset;
+
+      p {
+        animation-delay: $i * $timeOffset + 0.5s;
+
+      }
+    }
+  }
+
   &::before {
     content: counter(li);
     counter-increment: li;
@@ -159,6 +174,12 @@
     border-radius: 50%;
     line-height: 5rem;
     text-align: center;
+
+    animation-name: show-bullet;
+    animation-duration: 0.8s;
+    animation-delay: inherit;
+    animation-timing-function: cubic-bezier(.66,.17,.25,1.51);
+    animation-fill-mode: backwards;
 
     @media (max-width: $tablet) and (orientation: portrait) {
       top: 1rem;
@@ -180,10 +201,17 @@
   p {
     margin: 0;
 
+    animation-name: show-bullet-text;
+    animation-duration: 1s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: backwards;
+    animation-delay: inherit;
+
     @media (max-width: $tablet) and (orientation: portrait) {
       min-height: calc(1.4rem * 2.2);
     }
   }
+
 }
 
 .rules__link {
@@ -209,5 +237,31 @@
   @media (max-width: $mobile) and (orientation: landscape) {
     bottom: 2rem;
     right: 1.5rem;
+  }
+}
+
+
+@keyframes show-bullet {
+  from {
+    opacity: 0;
+    color: transparent;
+    transform: scale(0);
+  }
+
+  50% {
+    color: transparent;
+  }
+
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes show-bullet-text  {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
   }
 }
