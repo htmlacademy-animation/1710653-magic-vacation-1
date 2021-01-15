@@ -18,6 +18,9 @@
   color: $c-dark;
   border-radius: 50%;
 
+  transition-property: color;
+  transition-duration: 0.2s;
+
   @media (max-width: $tablet) and (orientation: portrait) {
     display: none;
   }
@@ -35,6 +38,9 @@
     background-color: $c-light;
     border: 2px solid $c-light;
     z-index: -1;
+
+    transition-property: width, height;
+    transition-duration: inherit;
   }
 
   svg {
@@ -90,6 +96,9 @@
   opacity: 0;
   pointer-events: none;
 
+  transition: opacity 0s;
+  transition-delay: 0.2s;
+
   @media (min-width: $stop-scaling) {
     margin-top: 15px;
   }
@@ -140,11 +149,33 @@
   .social-block--active & {
     opacity: 1;
     pointer-events: auto;
+
+    transition-delay: 0s;
   }
 
   li {
     flex: none;
     margin-bottom: 0.5rem;
+
+    opacity: 0;
+
+    transition-property: opacity , transform;
+    transition-duration: 0.2s;
+    transform: translateY(25%);
+    transition-delay: 0s, 0.5s;
+
+    .social-block--active & {
+      opacity: 1;
+      transform: translateY(0);
+
+      $baseDelay: 0.15s;
+      $stepDelay: 0.2s;
+      @for $i from 1 through 3 {
+        &:nth-child(#{$i}) {
+          transition-delay: ($baseDelay + $stepDelay * ($i - 1));
+        }
+      }
+    }
 
     @media (min-width: $stop-scaling) {
       margin-bottom: 5px;
@@ -168,6 +199,8 @@
   color: $c-light;
   border: 2px solid transparent;
   border-radius: 50%;
+
+  transition: color 0.2s;
 
   @media (min-width: $stop-scaling) {
     width: 40px;
