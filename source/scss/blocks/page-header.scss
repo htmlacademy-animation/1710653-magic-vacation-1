@@ -1,3 +1,5 @@
+
+
 .page-header {
   position: fixed;
   top: 0;
@@ -35,6 +37,18 @@
   padding: 1rem 0;
   width: 10rem;
   color: $c-light;
+
+  transform: translateX(-50%);
+  opacity: 0;
+
+  transition-property: opacity, transform;
+  transition-duration: $logoAnimationSeconds;
+  transition-timing-function: $firstScreenMacroTimingFunction;
+
+  .page-loaded & {
+    transform: translateX(0);
+    opacity: 1;
+  }
 
   @media (min-width: $stop-scaling) {
     top: -5px;
@@ -130,6 +144,16 @@
 .page-header__nav {
   display: flex;
   align-items: center;
+
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: $navigationAnimationSeconds;
+  transition-timing-function: $firstScreenMacroTimingFunction;
+  transition-delay: $navigationOffsetSeconds;
+
+  .page-loaded & {
+    opacity: 1;
+  }
 
   @media (max-width: $tablet) and (orientation: portrait) {
     position: fixed;
@@ -269,9 +293,11 @@
       }
     }
 
-    &.active {
+    .page-loaded &.active {
       &::after {
+        left: 0;
         width: 100%;
+        transition-delay: $navigationOffsetSeconds * 1.2;
       }
     }
 
