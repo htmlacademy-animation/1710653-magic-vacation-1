@@ -1,0 +1,26 @@
+.accent-typography {
+  margin: 0 -0.1em;
+
+  &__word {
+    display: inline-block;
+    margin: -0.2em 0.1em 0;
+    white-space: nowrap;
+    padding-top: 0.2em;
+
+
+    overflow: hidden;
+  }
+
+  &__letter {
+    display: inline-block;
+    will-change: transform;
+
+    transform: translate3d(0, 1.1em, 0);
+  }
+
+  &.active &__letter{
+    transform: translate3d(0,0,0);
+  }
+}
+
+
