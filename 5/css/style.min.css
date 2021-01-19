@@ -3533,13 +3533,18 @@ img {
 .prize-images {
   position: absolute;
   top: 0;
-  right: 0;
   bottom: 0;
-  left: 0; }
+  left: 50%;
+  width: 80%;
+  max-width: 1000px;
+  transform: translateX(-50%); }
+  @media (min-width: 1024px) {
+    .prize-images {
+      width: 60%; } }
   .prize-images__flamingo, .prize-images__leaf-blue-1, .prize-images__leaf-blue-2, .prize-images__leaf-green, .prize-images__leaf-suitcase {
     position: absolute; }
   .prize-images__flamingo {
-    width: 28.5vw;
+    width: 28.5%;
     left: 24%;
     bottom: 18%;
     z-index: 5;
@@ -3552,7 +3557,7 @@ img {
     animation-timing-function: ease, ease-in-out;
     transform-origin: 52.66667% 58.66667%; }
   .prize-images__leaf-blue-1 {
-    width: 31vw;
+    width: 31%;
     left: 50%;
     bottom: 28%;
     animation-name: show-blue-leaf-1;
@@ -3563,7 +3568,7 @@ img {
     animation-timing-function: cubic-bezier(0.4, 0.54, 0.46, 1.58);
     transform-origin: left 69.23077%; }
   .prize-images__leaf-blue-2 {
-    width: 30vw;
+    width: 30%;
     left: 12%;
     bottom: 18%;
     animation-name: show-blue-leaf-2;
@@ -3574,7 +3579,7 @@ img {
     animation-timing-function: cubic-bezier(0.4, 0.54, 0.46, 1.58);
     transform-origin: right 40.41667%; }
   .prize-images__leaf-green {
-    width: 37vw;
+    width: 37%;
     left: 46.2%;
     bottom: 23.5%;
     animation-name: show-blue-leaf-1;
@@ -3585,7 +3590,7 @@ img {
     animation-timing-function: cubic-bezier(0.4, 0.54, 0.46, 1.58);
     transform-origin: left 69.23077%; }
   .prize-images__leaf-suitcase {
-    width: 40vw;
+    width: 40%;
     left: 26%;
     bottom: 15%;
     animation-name: show-suitcase;
