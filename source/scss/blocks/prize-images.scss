@@ -2,9 +2,16 @@
   //position: relative;
   position: absolute;
   top: 0;
-  right: 0;
   bottom: 0;
-  left: 0;
+  left: 50%;
+
+  width: 80%;
+  max-width: 1000px;
+  transform: translateX(-50%);
+
+  @media (min-width: $tablet) {
+    width: 60%;
+  }
 
   &__flamingo,
   &__leaf-blue-1,
@@ -16,7 +23,7 @@
   }
 
   &__flamingo {
-    width: 28.5vw;
+    width: 28.5%;
     left: 24%;
     bottom: 18%;
     z-index: 5;
@@ -32,7 +39,7 @@
   }
 
   &__leaf-blue-1 {
-    width: 31vw;
+    width: 31%;
     left: 50%;
     bottom: 28%;
 
@@ -47,7 +54,7 @@
   }
 
   &__leaf-blue-2 {
-    width: 30vw;
+    width: 30%;
     left: 12%;
     bottom: 18%;
 
@@ -61,7 +68,7 @@
   }
 
   &__leaf-green {
-    width: 37vw;
+    width: 37%;
     left: 46.2%;
     bottom: 23.5%;
 
@@ -75,7 +82,7 @@
   }
 
   &__leaf-suitcase {
-    width: 40vw;
+    width: 40%;
     left: 26%;
     bottom: 15%;
 
