@@ -185,6 +185,22 @@
   height: 4rem;
   color: $c-dark;
 
+  animation-fill-mode: backwards;
+  animation-duration: 0.5s;
+  transform-origin: center center;
+  animation-timing-function: ease-out;
+
+  .screen:not(.active) & {
+    opacity: 0;
+  }
+  .screen.active &--prev {
+    animation-name: show-left-slider-control;
+  }
+
+  .screen.active &--next {
+    animation-name: show-right-slider-control;
+  }
+
   @media (min-width: $stop-scaling) {
     width: 40px;
     height: 40px;
@@ -303,5 +319,38 @@
       height: 0.4rem;
       background-color: $c-light;
     }
+  }
+}
+
+.slider__pagination {
+  .screen:not(.active) & {
+    opacity: 0;
+  }
+
+  animation-name: show-pagination;
+  animation-delay: 0.8s;
+  animation-duration: 0.2s;
+  animation-fill-mode: backwards;
+}
+
+@keyframes show-left-slider-control {
+  from {
+    opacity: 0;
+    transform: rotate(-360deg);
+    margin-left:  -100px
+  }
+}
+
+@keyframes show-right-slider-control {
+  from {
+    opacity: 0;
+    transform: rotate(360deg);
+    margin-right:  -100px;
+  }
+}
+
+@keyframes show-pagination  {
+  from {
+    opacity: 0;
   }
 }
