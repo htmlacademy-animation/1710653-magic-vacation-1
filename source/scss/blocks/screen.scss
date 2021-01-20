@@ -38,6 +38,23 @@ $screenBackgroundAnimationSeconds: 0.25s;
   left: 0;
   right: 0;
   z-index: 1;
+
+  transform: translateY(100%);
+
+  transition-property: transform, color;
+  transition-duration: $footerAnimationSeconds;
+  transition-timing-function: $firstScreenMacroTimingFunction;
+
+  body.--footer-opacity &{
+    color: transparent;
+    transform: translateY(0);
+  }
+
+  .screen.active & {
+    transform: translateY(0);
+    opacity: 1;
+    color: $c-dark;
+  }
 }
 
 .screen__footer {
@@ -51,12 +68,19 @@ $screenBackgroundAnimationSeconds: 0.25s;
 
   transform: translateY(100%);
 
-  transition-property: transform;
+  transition-property: transform, color;
   transition-duration: $footerAnimationSeconds;
   transition-timing-function: $firstScreenMacroTimingFunction;
 
-  .page-loaded & {
+  body.--footer-opacity &{
+    color: transparent;
     transform: translateY(0);
+  }
+
+  .screen.active & {
+    opacity: 1;
+    transform: translateY(0);
+    color: $c-dark;
   }
 
   @media (max-width: $tablet) and (orientation: portrait) {
