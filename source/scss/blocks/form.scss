@@ -91,11 +91,11 @@
     border: 1px solid $c-purple;
   }
 
-  .screen:not(.active) &{
+  .screen:not(.active):not(.screen--show) & {
     padding: 0 3rem;
   }
 
-  .screen.active &{
+  .screen.active & {
     width: 100%;
     opacity: 1;
     color: $c-dark;
@@ -175,6 +175,11 @@
 
 .form--result {
   .form__field {
+    animation: show-field-result 0.85s ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  .form__field-container {
     width: calc(100% - 31rem);
 
     @media (min-width: $stop-scaling) {
@@ -192,5 +197,44 @@
     @media (max-width: $mobile) and (orientation: landscape) {
       width: calc(100% - 5rem);
     }
+  }
+
+  .form__button {
+    .screen--show &{
+      animation: show-send-button 0.85s ease-out;
+      animation-fill-mode: backwards;
+    }
+  }
+}
+
+@keyframes show-field-result {
+  70% {
+    color: transparent;
+  }
+  to {
+    width: 100%;
+
+    opacity: 1;
+    color: $c-dark;
+  }
+}
+
+@keyframes show-send-button {
+  from {
+    opacity: 0;
+    color :transparent;
+  }
+
+  30% {
+    color: transparent;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+    color: $c-dark;
   }
 }
