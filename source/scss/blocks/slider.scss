@@ -340,16 +340,14 @@
 @keyframes show-left-slider-control {
   from {
     opacity: 0;
-    transform: rotate(-360deg);
-    margin-left:  -100px
+    transform: translateX(-100%) rotate(-180deg);
   }
 }
 
 @keyframes show-right-slider-control {
   from {
     opacity: 0;
-    transform: rotate(360deg);
-    margin-right:  -100px;
+    transform: translateX(100%) rotate(180deg);
   }
 }
 
