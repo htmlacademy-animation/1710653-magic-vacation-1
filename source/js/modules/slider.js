@@ -5,16 +5,31 @@ export default () => {
   let sliderContainer = document.getElementById(`story`);
   sliderContainer.style.backgroundImage = `url("img/slide1.jpg"), linear-gradient(180deg, rgba(83, 65, 118, 0) 0%, #523E75 16.85%)`;
 
+  const ThemeSlidesByIndex = [
+    `--purple`,
+    `--light-blue`,
+    `--blue`,
+    `--main`,
+  ];
+
+  const setPageTheme = () => {
+    document.body.dataset.theme = ThemeSlidesByIndex[Math.floor(storySlider.activeIndex / 2)];
+  };
+
+  const resetPageTheme = () => {
+    delete document.body.dataset.theme;
+  };
+
   const setSlider = function () {
     if (((window.innerWidth / window.innerHeight) < 1) || window.innerWidth < 769) {
       storySlider = new Swiper(`.js-slider`, {
         watchSlidesVisibility: true,
         pagination: {
           el: `.swiper-pagination`,
-          type: `bullets`
+          type: `bullets`,
         },
         keyboard: {
-          enabled: true
+          enabled: true,
         },
         on: {
           slideChange: () => {
@@ -27,13 +42,15 @@ export default () => {
             } else if (storySlider.activeIndex === 6 || storySlider.activeIndex === 7) {
               sliderContainer.style.backgroundImage = `url("img/slide4.jpg"), linear-gradient(180deg, rgba(45, 39, 63, 0) 0%, #2F2A42 16.85%)`;
             }
+
+            setPageTheme();
           },
           resize: () => {
             storySlider.update();
-          }
+          },
         },
         observer: true,
-        observeParents: true
+        observeParents: true,
       });
     } else {
       storySlider = new Swiper(`.js-slider`, {
@@ -42,14 +59,14 @@ export default () => {
         watchSlidesVisibility: true,
         pagination: {
           el: `.swiper-pagination`,
-          type: `fraction`
+          type: `fraction`,
         },
         navigation: {
           nextEl: `.js-control-next`,
           prevEl: `.js-control-prev`,
         },
         keyboard: {
-          enabled: true
+          enabled: true,
         },
         on: {
           slideChange: () => {
@@ -62,16 +79,26 @@ export default () => {
             } else if (storySlider.activeIndex === 6) {
               sliderContainer.style.backgroundImage = `url("img/slide4.jpg")`;
             }
+
+            setPageTheme();
           },
           resize: () => {
             storySlider.update();
-          }
+          },
         },
         observer: true,
-        observeParents: true
+        observeParents: true,
       });
     }
   };
+
+  document.body.addEventListener(`screenChanged`, (event) => {
+    if (storySlider && event.detail.screenName === `story`) {
+      setPageTheme();
+    } else {
+      resetPageTheme();
+    }
+  });
 
   window.addEventListener(`resize`, function () {
     if (storySlider) {

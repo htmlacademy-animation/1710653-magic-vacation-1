@@ -1,6 +1,8 @@
 $c-light: #ffffff;
 $c-dark: #5f458c;
 $c-purple: #a67ee5;
+$c-blue: #3e72ee;
+$c-light-blue: #a0ceff;
 
 $font: "Proxima Nova", "Arial", sans-serif;
 $font-alt: "Radical",  "Arial", sans-serif;
@@ -26,3 +28,20 @@ $navigationAnimationSeconds: 0.8s;
 $navigationOffsetSeconds: 0.35s;
 $footerAnimationSeconds: 0.8s;
 $firstScreenMacroTimingFunction: cubic-bezier(0.28,0,0.11,0.92);
+
+
+:root {
+  #{--primary-accent-color}: $c-purple;
+}
+
+[data-theme="--purple"] {
+  #{--primary-accent-color}: $c-dark;
+}
+
+[data-theme="--blue"] {
+  #{--primary-accent-color}: $c-blue;
+}
+
+[data-theme="--light-blue"] {
+  #{--primary-accent-color}: $c-light-blue;
+}
