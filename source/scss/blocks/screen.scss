@@ -38,6 +38,23 @@ $screenBackgroundAnimationSeconds: 0.25s;
   left: 0;
   right: 0;
   z-index: 1;
+
+  transform: translateY(100%);
+
+  transition-property: transform, color;
+  transition-duration: $footerAnimationSeconds;
+  transition-timing-function: $firstScreenMacroTimingFunction;
+
+  body.--footer-opacity &{
+    color: transparent;
+    transform: translateY(0);
+  }
+
+  .screen.active & {
+    transform: translateY(0);
+    opacity: 1;
+    color: $c-dark;
+  }
 }
 
 .screen__footer {
@@ -51,12 +68,19 @@ $screenBackgroundAnimationSeconds: 0.25s;
 
   transform: translateY(100%);
 
-  transition-property: transform;
+  transition-property: transform, color;
   transition-duration: $footerAnimationSeconds;
   transition-timing-function: $firstScreenMacroTimingFunction;
 
-  .page-loaded & {
+  body.--footer-opacity &{
+    color: transparent;
     transform: translateY(0);
+  }
+
+  .screen.active & {
+    opacity: 1;
+    transform: translateY(0);
+    color: $c-dark;
   }
 
   @media (max-width: $tablet) and (orientation: portrait) {
@@ -64,9 +88,31 @@ $screenBackgroundAnimationSeconds: 0.25s;
     height: 3.5rem;
     border-radius: 0 3.6rem 0 0;
 
+    background-color: transparent;
+
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: inherit;
+
+      background-color: $c-light;
+
+      transition: all 0.25s ease-in-out;
+    }
+
     &.screen__footer--full {
       width: 100%;
       height: 18rem;
+
+      &::before {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 
@@ -87,9 +133,13 @@ $screenBackgroundAnimationSeconds: 0.25s;
 
   @media (max-width: $tablet) and (orientation: portrait) {
     opacity: 0;
+    position: relative;
+
+    transition-delay: 0s;
 
     .screen__footer--full & {
       opacity: 1;
+      transition: opacity 0.3s ease-out 0.25s;
     }
   }
 

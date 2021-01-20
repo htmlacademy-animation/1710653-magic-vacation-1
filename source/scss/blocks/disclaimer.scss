@@ -1,5 +1,5 @@
 .disclaimer {
-  color: $c-dark;
+  color: currentColor;
   background-color: $c-light;
 
   @media (max-width: $tablet) and (orientation: portrait) {

@@ -1,6 +1,8 @@
 
 
 .page-header {
+  #{--main-header-active-color}: $c-purple;
+
   position: fixed;
   top: 0;
   left: 0;
@@ -19,6 +21,8 @@
   @media (max-width: $mobile) and (orientation: landscape) {
     padding: 0.9rem 0;
   }
+
+
 }
 
 .page-header__wrapper {
@@ -142,6 +146,8 @@
 }
 
 .page-header__nav {
+
+
   display: flex;
   align-items: center;
 
@@ -303,12 +309,13 @@
 
     &:hover,
     &:focus {
-      color: $c-purple;
+      color: var(--primary-accent-color);
+      //color: $c-purple;
       outline: none;
 
       &::after {
         opacity: 1;
-        background-color: $c-purple;
+        background-color: currentColor;
         width: 100%;
         left: 0;
       }

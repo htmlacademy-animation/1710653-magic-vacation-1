@@ -138,6 +138,14 @@ export default () => {
 
 
   document.body.addEventListener(`screenChanged`, ({detail}) => {
+    if (detail.screenName === `prizes` || detail.screenName === `rules`) {
+      setTimeout(() => {
+        document.body.classList.add(`--footer-opacity`);
+      }, 1000);
+    } else {
+      document.body.classList.remove(`--footer-opacity`);
+    }
+
     if (screensAnimations.hasOwnProperty(detail.screenName)) {
       screensAnimations[detail.screenName].run();
     }

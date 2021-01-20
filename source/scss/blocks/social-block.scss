@@ -15,7 +15,7 @@
   display: block;
   width: 4rem;
   height: 4rem;
-  color: $c-dark;
+  color: var(--primary-accent-color);
   border-radius: 50%;
 
   transition-property: color;
@@ -52,7 +52,7 @@
 
   &:hover,
   .social-block--active & {
-    color: $c-purple;
+    color: var(--primary-accent-color);
 
     &::before {
       width: 112.5%;
@@ -61,11 +61,11 @@
   }
 
   &:focus {
-    color: $c-purple;
+    color: var(--primary-accent-color);
     outline: none;
 
     &::before {
-      border-color: $c-purple;
+      border-color: var(--primary-accent-color);
     }
 
     & + .social-block__list {
@@ -81,8 +81,8 @@
     &::before {
       width: 100%;
       height: 100%;
-      background-color: $c-purple;
-      border-color: $c-purple;
+      background-color: var(--primary-accent-color);
+      border-color: var(--primary-accent-color);
     }
   }
 }
@@ -218,7 +218,7 @@
   }
 
   &:hover {
-    color: $c-purple;
+    color: var(--primary-accent-color);
   }
 
   &:focus {

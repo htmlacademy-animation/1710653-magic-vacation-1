@@ -116,6 +116,10 @@
   line-height: 1.2;
   color: $c-light;
 
+  animation-name: show-bad-button-text;
+  animation-fill-mode: backwards;
+  animation-duration: 0.3s;
+
   @media (min-width: $stop-scaling) {
     margin: auto auto 10px;
     min-width: 340px;
@@ -147,6 +151,10 @@
     width: 4rem;
     height: 4rem;
     color: $c-dark;
+
+    animation-name: show-bad-button-icon;
+    animation-fill-mode: backwards;
+    animation-duration: 0.4s;
 
     @media (min-width: $stop-scaling) {
       margin-left: 15px;
@@ -266,5 +274,17 @@
     @media (max-width: $mobile) and (orientation: landscape) {
       width: 45rem;
     }
+  }
+}
+
+@keyframes show-bad-button-text {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes show-bad-button-icon {
+  from {
+    transform: translateX(100%) rotate(180deg);
   }
 }
