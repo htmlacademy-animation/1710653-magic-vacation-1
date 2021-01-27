@@ -95,9 +95,22 @@ export default () => {
       [[3, 2, 1, 2, 3]],
     );
 
+    const svgAnimateImages = document.querySelectorAll(`[data-animate-svg-src]`);
+
     prizesScreen.addAnimation(() => {
       pageHeading.run();
     }, 500);
+
+    prizesScreen.addAnimation(() => {
+      svgAnimateImages.forEach((image) => {
+        if (image.done) {
+          return;
+        }
+
+        image.src = image.dataset.animateSvgSrc;
+        image.done = true;
+      });
+    }, 0);
 
     screensAnimations[Screens.PRIZES] = prizesScreen;
   }
