@@ -423,7 +423,6 @@ M275 225.43H257.87C253.22 225.409 248.766 223.548 245.484 220.254C242.201 216.96
         accumulate="sum"
         fill="freeze"
         begin="hideFirstFrame.end - 500ms"
-
       />
       <animateTransform
         attributeName="transform"
@@ -433,7 +432,6 @@ M275 225.43H257.87C253.22 225.409 248.766 223.548 245.484 220.254C242.201 216.96
         dur="800ms"
         repeatCount="1"
         accumulate="sum" begin="hideFirstFrame.end - 500ms"
-
       />
       <animateTransform
         attributeName="transform"
