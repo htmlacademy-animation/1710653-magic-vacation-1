@@ -15,7 +15,7 @@ export default () => {
         targetEl[0].classList.add(`screen--show`);
         targetEl[0].classList.remove(`screen--hidden`);
 
-        const svgStartAnimation = targetEl[0].querySelector(`svg animate`);
+        const svgStartAnimation = targetEl[0].querySelector(`svg animate#startAnimation${target}`);
 
         setTimeout(() => {
           svgStartAnimation.beginElement();
