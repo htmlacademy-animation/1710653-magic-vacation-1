@@ -252,18 +252,18 @@
   .result__title {
     margin-top: 9.5rem;
     width: 66.5rem;
-    height: 11.3rem;
+    height: 11.3rem * 2;
 
     @media (min-width: $stop-scaling) {
       margin-top: 95px;
       width: 665px;
-      height: 113px;
+      height: 113px * 2;
     }
 
     @media (orientation: portrait) {
       margin-top: 0;
       width: 28.8rem;
-      height: 4.9rem;
+      height: 4.9rem * 2;
     }
 
     @media (max-width: $tablet) and (orientation: landscape) {
@@ -274,6 +274,10 @@
     @media (max-width: $mobile) and (orientation: landscape) {
       width: 45rem;
     }
+  }
+
+  svg {
+    transform: translateY(-100%);
   }
 }
 
@@ -286,5 +290,21 @@
 @keyframes show-bad-button-icon {
   from {
     transform: translateX(100%) rotate(180deg);
+  }
+}
+
+.win-text-svg {
+  animation: showWin 1s ease-in-out 1s;
+}
+
+@keyframes showWin {
+  from {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }

@@ -22,18 +22,4 @@
 @import "blocks/accent-typography.scss";
 @import "blocks/prize-images.scss";
 
-.win-text-svg {
-  animation: showWin 1s ease-in-out 1s;
-}
 
-@keyframes showWin {
-  from {
-    transform: scale(1.2);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
