@@ -1,3 +1,5 @@
+import game from "./game";
+
 export default () => {
   let showResultEls = document.querySelectorAll(`.js-show-result`);
   let results = document.querySelectorAll(`.screen--result`);
@@ -32,6 +34,8 @@ export default () => {
         });
         document.getElementById(`messages`).innerHTML = ``;
         document.getElementById(`message-field`).focus();
+
+        game(`#game-timer`).start();
       });
     }
   }

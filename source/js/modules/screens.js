@@ -1,4 +1,5 @@
 import AccentTypographyBuilder from "./AccentTypographyBuilder";
+import game from "./game";
 
 class ScreenAnimationTimeline {
   constructor(id) {
@@ -144,6 +145,7 @@ export default () => {
 
     gameScreen.addAnimation(() => {
       pageHeading.run();
+      game(`#game-timer`).start(); // запускаем таймер
     }, 500);
 
     screensAnimations[Screens.GAME] = gameScreen;
