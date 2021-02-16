@@ -29,12 +29,23 @@ class GameTimer {
     const now = new Date();
 
     const diff = Math.floor((this.endDate.getTime() - now.getTime()) / 1000);
+
     const mm = Math.floor(diff / 60);
     const ss = Math.floor((diff - mm * 60));
 
-    this.render(mm, ss);
 
-    // проверяем не истекло ли время рендерим и продолжаем
+    /**
+     *  Можно конечно ограничить количество кадров через разницу во времени,
+     *  но все равно нужно будет проверять разницу сколько прошло времени, и сколько осталось
+     */
+    // Перерендериваем если значния отличаются
+    if (this.prevValue !== diff) {
+      // кешируем текущее значение
+      this.prevValue = diff;
+      this.render(mm, ss);
+    }
+
+    // проверяем не истекло ли время и продолжаем
     if (mm > 0 || ss > 0) {
       this.animationId = requestAnimationFrame(this.loop.bind(this));
     } else {
