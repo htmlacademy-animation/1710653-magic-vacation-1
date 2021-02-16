@@ -1,10 +1,12 @@
 import AccentTypographyBuilder from "./AccentTypographyBuilder";
+import {animateNumber} from "./numberAnimation";
 
 class ScreenAnimationTimeline {
   constructor(id) {
     this._id = id;
     this.played = false;
     this.animations = [];
+    this.oneAnimations = [];
   }
 
   _run() {
@@ -15,10 +17,22 @@ class ScreenAnimationTimeline {
         animationCallback();
       }
     }
+
+    for (const animationCallback of this.oneAnimations) {
+      if (typeof animationCallback === `function`) {
+        animationCallback();
+      }
+
+      this.oneAnimations = [];
+    }
   }
 
   addAnimation(callback, delay) {
     this.animations.push(() => setTimeout(() => callback(), delay));
+  }
+
+  addOneAnimation(callback, delay) {
+    this.oneAnimations.push(() => setTimeout(() => callback(), delay));
   }
 
   run() {
@@ -88,6 +102,8 @@ export default () => {
   {
     const prizesScreen = new ScreenAnimationTimeline(Screens.PRIZES);
 
+    const prizesNumbers = document.querySelectorAll(`.js-animate-number`);
+
     const pageHeading = new AccentTypographyBuilder(
       `.prizes__title`,
       650, `transform`,
@@ -101,7 +117,14 @@ export default () => {
       pageHeading.run();
     }, 500);
 
-    prizesScreen.addAnimation(() => {
+    prizesScreen.addOneAnimation(() => {
+      prizesNumbers.forEach((el) => {
+        const {from, to} = el.dataset;
+        animateNumber(parseInt(from, 10), parseInt(to, 10), el, 900);
+      });
+    }, 500);
+
+    prizesScreen.addOneAnimation(() => {
       svgAnimateImages.forEach((image) => {
         if (image.done) {
           return;
@@ -150,7 +173,7 @@ export default () => {
   }
 
 
-  document.body.addEventListener(`screenChanged`, ({detail}) => {
+  document.body.addEventListener(`screenChanged`, ({ detail }) => {
     if (detail.screenName === `prizes` || detail.screenName === `rules`) {
       setTimeout(() => {
         document.body.classList.add(`--footer-opacity`);
