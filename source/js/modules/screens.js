@@ -2,6 +2,7 @@ import AccentTypographyBuilder from "./AccentTypographyBuilder";
 import { animateNumber } from "./numberAnimation";
 import { PRIZE_ANIMATION_SETTINGS } from "../settings";
 import { runSerial } from "../helpers/animate";
+import game from "./game";
 
 class ScreenAnimationTimeline {
   constructor(id) {
@@ -214,6 +215,7 @@ export default () => {
 
     gameScreen.addAnimation(() => {
       pageHeading.run();
+      game(`#game-timer`).start(); // запускаем таймер
     }, 500);
 
     screensAnimations[Screens.GAME] = gameScreen;
