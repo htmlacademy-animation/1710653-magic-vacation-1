@@ -2,7 +2,7 @@
   <g opacity="0">
     <animate
       dur="100ms"
-      begin="3s"
+      begin="0s"
       id="mainShow"
       attributeName="opacity"
       to="1"

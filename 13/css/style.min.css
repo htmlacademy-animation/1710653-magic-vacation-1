@@ -1553,7 +1553,9 @@ img {
   font-weight: 400;
   font-size: 4.8rem;
   line-height: 0.906;
-  letter-spacing: 0; }
+  letter-spacing: 0;
+  text-align: left;
+  width: 5ch; }
   @media (min-width: 2000px) {
     .game__counter {
       font-size: 48px; } }
@@ -2100,7 +2102,11 @@ img {
       padding-left: 2rem; } }
 
 .prizes__item {
-  margin-left: 7.5rem; }
+  margin-left: 7.5rem;
+  opacity: 0;
+  transition: opacity 250ms ease-in; }
+  .prizes__item.has-animate {
+    opacity: 1; }
   @media (min-width: 2000px) {
     .prizes__item {
       margin-left: 75px; } }
@@ -2225,7 +2231,11 @@ img {
     font-family: "Radical", "Arial", sans-serif;
     font-weight: 400;
     font-size: 12rem;
-    line-height: 0.55; }
+    line-height: 0.55;
+    opacity: 0;
+    transition: opacity 0.2s ease-out; }
+    .prizes__desc b.has-animate-number {
+      opacity: 1; }
     @media (min-width: 2000px) {
       .prizes__desc b {
         font-size: 120px; } }
@@ -2243,7 +2253,14 @@ img {
     display: flex;
     align-items: flex-end;
     margin-left: 1.4rem;
-    max-width: 14rem; }
+    max-width: 14rem;
+    transform: translate(40px, 0);
+    opacity: 0;
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+    transition-delay: 1s; }
+    .has-animate .prizes__desc span {
+      transform: translate(0, 0);
+      opacity: 1; }
     @media (min-width: 2000px) {
       .prizes__desc span {
         margin-left: 14px;
@@ -2505,7 +2522,7 @@ img {
     .result--negative .result__title {
       width: 45rem; } }
 
-.result--negative svg {
+.result--negative .result__title svg {
   transform: translateY(-100%); }
 
 @keyframes show-bad-button-text {
