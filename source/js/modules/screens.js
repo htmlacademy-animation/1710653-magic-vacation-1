@@ -1,4 +1,7 @@
 import AccentTypographyBuilder from "./AccentTypographyBuilder";
+import { animateNumber } from "./numberAnimation";
+import { PRIZE_ANIMATION_SETTINGS } from "../settings";
+import { runSerial } from "../helpers/animate";
 import game from "./game";
 
 class ScreenAnimationTimeline {
@@ -6,6 +9,7 @@ class ScreenAnimationTimeline {
     this._id = id;
     this.played = false;
     this.animations = [];
+    this.oneAnimations = [];
   }
 
   _run() {
@@ -16,10 +20,22 @@ class ScreenAnimationTimeline {
         animationCallback();
       }
     }
+
+    for (const animationCallback of this.oneAnimations) {
+      if (typeof animationCallback === `function`) {
+        animationCallback();
+      }
+
+      this.oneAnimations = [];
+    }
   }
 
   addAnimation(callback, delay) {
     this.animations.push(() => setTimeout(() => callback(), delay));
+  }
+
+  addOneAnimation(callback, delay) {
+    this.oneAnimations.push(() => setTimeout(() => callback(), delay));
   }
 
   run() {
@@ -96,22 +112,55 @@ export default () => {
       [[3, 2, 1, 2, 3]],
     );
 
-    const svgAnimateImages = document.querySelectorAll(`[data-animate-svg-src]`);
-
     prizesScreen.addAnimation(() => {
       pageHeading.run();
     }, 500);
 
-    prizesScreen.addAnimation(() => {
-      svgAnimateImages.forEach((image) => {
-        if (image.done) {
-          return;
-        }
 
-        image.src = image.dataset.animateSvgSrc;
-        image.done = true;
-      });
-    }, 0);
+    const runPrizeImageAnimation = (el) => {
+      const image = el.querySelector(`[data-animate-svg-src]`);
+
+      if (image.done) {
+        return;
+      }
+
+      image.src = image.dataset.animateSvgSrc;
+      image.done = true;
+    };
+
+    // группируем анимацию призов в один поток
+    const tasks = PRIZE_ANIMATION_SETTINGS.map((prize) => {
+      const el = document.querySelector(prize.el);
+
+      // если нужно анимировать количество призов
+
+      const number = el.querySelector(`b`);
+
+      // Откладываем запуск цифр
+      const animateNumberCallback = () => setTimeout(
+        () => {
+          number.classList.add(`has-animate-number`);
+          if (prize.animateNumber) {
+            const {from, to} = number.dataset;
+            animateNumber(parseInt(from, 10), parseInt(to, 10), number, 900);
+          }
+        },
+        prize.numberAnimateStart
+      );
+
+      return () => new Promise((resolve) => {
+        setTimeout(() => {
+          el.classList.add(`has-animate`);
+          runPrizeImageAnimation(el);
+          animateNumberCallback();
+          resolve();
+        }, prize.duration);
+        });
+    });
+
+    prizesScreen.addOneAnimation(() => {
+      runSerial(tasks);
+    }, 500);
 
     screensAnimations[Screens.PRIZES] = prizesScreen;
   }
@@ -152,7 +201,7 @@ export default () => {
   }
 
 
-  document.body.addEventListener(`screenChanged`, ({detail}) => {
+  document.body.addEventListener(`screenChanged`, ({ detail }) => {
     if (detail.screenName === `prizes` || detail.screenName === `rules`) {
       setTimeout(() => {
         document.body.classList.add(`--footer-opacity`);
