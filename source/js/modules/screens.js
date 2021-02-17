@@ -105,8 +105,6 @@ export default () => {
   {
     const prizesScreen = new ScreenAnimationTimeline(Screens.PRIZES);
 
-    // const prizesNumbers = document.querySelectorAll(`.js-animate-number`);
-
     const pageHeading = new AccentTypographyBuilder(
       `.prizes__title`,
       650, `transform`,
@@ -114,29 +112,10 @@ export default () => {
       [[3, 2, 1, 2, 3]],
     );
 
-    // const svgAnimateImages = document.querySelectorAll(`[data-animate-svg-src]`);
-
     prizesScreen.addAnimation(() => {
       pageHeading.run();
     }, 500);
-/*
-    prizesScreen.addOneAnimation(() => {
-      prizesNumbers.forEach((el) => {
-        const { from, to } = el.dataset;
-        animateNumber(parseInt(from, 10), parseInt(to, 10), el, 900);
-      });
-    }, 500);
 
-    prizesScreen.addOneAnimation(() => {
-      svgAnimateImages.forEach((image) => {
-        if (image.done) {
-          return;
-        }
-
-        image.src = image.dataset.animateSvgSrc;
-        image.done = true;
-      });
-    }, 0);*/
 
     const runPrizeImageAnimation = (el) => {
       const image = el.querySelector(`[data-animate-svg-src]`);
