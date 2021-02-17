@@ -1,5 +1,7 @@
 import AccentTypographyBuilder from "./AccentTypographyBuilder";
-import {animateNumber} from "./numberAnimation";
+import { animateNumber } from "./numberAnimation";
+import { PRIZE_ANIMATION_SETTINGS } from "../settings";
+import { runSerial } from "../helpers/animate";
 
 class ScreenAnimationTimeline {
   constructor(id) {
@@ -102,7 +104,7 @@ export default () => {
   {
     const prizesScreen = new ScreenAnimationTimeline(Screens.PRIZES);
 
-    const prizesNumbers = document.querySelectorAll(`.js-animate-number`);
+    // const prizesNumbers = document.querySelectorAll(`.js-animate-number`);
 
     const pageHeading = new AccentTypographyBuilder(
       `.prizes__title`,
@@ -111,15 +113,15 @@ export default () => {
       [[3, 2, 1, 2, 3]],
     );
 
-    const svgAnimateImages = document.querySelectorAll(`[data-animate-svg-src]`);
+    // const svgAnimateImages = document.querySelectorAll(`[data-animate-svg-src]`);
 
     prizesScreen.addAnimation(() => {
       pageHeading.run();
     }, 500);
-
+/*
     prizesScreen.addOneAnimation(() => {
       prizesNumbers.forEach((el) => {
-        const {from, to} = el.dataset;
+        const { from, to } = el.dataset;
         animateNumber(parseInt(from, 10), parseInt(to, 10), el, 900);
       });
     }, 500);
@@ -133,7 +135,52 @@ export default () => {
         image.src = image.dataset.animateSvgSrc;
         image.done = true;
       });
-    }, 0);
+    }, 0);*/
+
+    const runPrizeImageAnimation = (el) => {
+      const image = el.querySelector(`[data-animate-svg-src]`);
+
+      if (image.done) {
+        return;
+      }
+
+      image.src = image.dataset.animateSvgSrc;
+      image.done = true;
+    };
+
+    // группируем анимацию призов в один поток
+    const tasks = PRIZE_ANIMATION_SETTINGS.map((prize) => {
+      const el = document.querySelector(prize.el);
+
+      // если нужно анимировать количество призов
+
+      const number = el.querySelector(`b`);
+
+      // Откладываем запуск цифр
+      const animateNumberCallback = () => setTimeout(
+        () => {
+          number.classList.add(`has-animate-number`);
+          if (prize.animateNumber) {
+            const {from, to} = number.dataset;
+            animateNumber(parseInt(from, 10), parseInt(to, 10), number, 900);
+          }
+        },
+        prize.numberAnimateStart
+      );
+
+      return () => new Promise((resolve) => {
+        setTimeout(() => {
+          el.classList.add(`has-animate`);
+          runPrizeImageAnimation(el);
+          animateNumberCallback();
+          resolve();
+        }, prize.duration);
+        });
+    });
+
+    prizesScreen.addOneAnimation(() => {
+      runSerial(tasks);
+    }, 500);
 
     screensAnimations[Screens.PRIZES] = prizesScreen;
   }

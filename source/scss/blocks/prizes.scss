@@ -107,6 +107,13 @@
 .prizes__item {
   margin-left: 7.5rem;
 
+  opacity: 0;
+  transition: opacity 250ms ease-in;
+
+  &.has-animate {
+    opacity: 1;
+  }
+
   @media (min-width: $stop-scaling) {
     margin-left: 75px;
   }
@@ -279,6 +286,14 @@
     font-size: 12rem;
     line-height: 0.55;
 
+    opacity: 0;
+
+    transition: opacity 0.2s ease-out;
+
+    &.has-animate-number {
+      opacity: 1;
+    }
+
     @media (min-width: $stop-scaling) {
       font-size: 120px;
     }
@@ -302,6 +317,17 @@
     align-items: flex-end;
     margin-left: 1.4rem;
     max-width: 14rem;
+
+    transform: translate(40px, 0);
+    opacity: 0;
+
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+    transition-delay: 1s;
+
+    .has-animate & {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
 
     @media (min-width: $stop-scaling) {
       margin-left: 14px;

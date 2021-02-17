@@ -6,34 +6,20 @@
  * @param {number} duration ms
  * @param {number} fps
  */
+import {animateDuration} from "../helpers/animate";
+
 export const animateNumber = (from = 0, to, el, duration, fps = 12) => {
-  let then = Date.now();
-  let currentValue = from;
-  const fpsInterval = 1000 / fps;
+  return new Promise((resolve) => {
+    const render = (p) => {
+      el.innerText = Math.ceil(p * to);
+    };
 
-  // рассчитываем количество шагов с учетом длительности и требуемого FPS
-  const step = Math.ceil((to - from) / (fps * duration / 1000));
+    el.innerText = from;
 
-  const render = () => {
-    currentValue += step;
-    el.innerText = currentValue > to ? `${to}` : `${currentValue}`;
-  };
-
-  // Основной цикл
-  const loop = () => {
-    const now = Date.now();
-    const diff = now - then;
-
-    if (currentValue <= to) {
-      requestAnimationFrame(loop);
-    }
-
-    if (diff > fpsInterval) {
-      then = now - (diff % fpsInterval);
-      render();
-    }
-  };
-
-  loop();
+    animateDuration(render, 900, fps).then(() => {
+      el.innerText = to;
+      resolve();
+    });
+  });
 };
 
