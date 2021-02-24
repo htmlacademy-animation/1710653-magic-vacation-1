@@ -61334,12 +61334,12 @@ class WinScene extends _CanvasScene__WEBPACK_IMPORTED_MODULE_3__["CanvasScene"] 
   loadImages() {
     return Promise.all(
       [
-        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`/img/module-4/win-primary-images/sea-calf-2.png`, this.seaCalf),
-        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`/img/module-4/win-primary-images/tree.png`, this.tree),
-        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`/img/module-4/win-primary-images/tree 2.png`, this.tree2),
-        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`/img/module-4/win-primary-images/ice.png`, this.ice),
-        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`/img/module-4/win-primary-images/airplane.png`, this.airplane),
-        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`/img/module-4/win-primary-images/snowflake.png`, this.snowflake),
+        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`./img/module-4/win-primary-images/sea-calf-2.png`, this.seaCalf),
+        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`./img/module-4/win-primary-images/tree.png`, this.tree),
+        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`./img/module-4/win-primary-images/tree 2.png`, this.tree2),
+        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`./img/module-4/win-primary-images/ice.png`, this.ice),
+        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`./img/module-4/win-primary-images/airplane.png`, this.airplane),
+        Object(_helpers_preloadImage__WEBPACK_IMPORTED_MODULE_1__["preloadImage"])(`./img/module-4/win-primary-images/snowflake.png`, this.snowflake),
       ],
     );
   }
