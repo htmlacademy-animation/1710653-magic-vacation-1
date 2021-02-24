@@ -130,12 +130,12 @@ export class WinScene extends CanvasScene {
   loadImages() {
     return Promise.all(
       [
-        preloadImage(`/img/module-4/win-primary-images/sea-calf-2.png`, this.seaCalf),
-        preloadImage(`/img/module-4/win-primary-images/tree.png`, this.tree),
-        preloadImage(`/img/module-4/win-primary-images/tree 2.png`, this.tree2),
-        preloadImage(`/img/module-4/win-primary-images/ice.png`, this.ice),
-        preloadImage(`/img/module-4/win-primary-images/airplane.png`, this.airplane),
-        preloadImage(`/img/module-4/win-primary-images/snowflake.png`, this.snowflake),
+        preloadImage(`./img/module-4/win-primary-images/sea-calf-2.png`, this.seaCalf),
+        preloadImage(`./img/module-4/win-primary-images/tree.png`, this.tree),
+        preloadImage(`./img/module-4/win-primary-images/tree 2.png`, this.tree2),
+        preloadImage(`./img/module-4/win-primary-images/ice.png`, this.ice),
+        preloadImage(`./img/module-4/win-primary-images/airplane.png`, this.airplane),
+        preloadImage(`./img/module-4/win-primary-images/snowflake.png`, this.snowflake),
       ],
     );
   }
