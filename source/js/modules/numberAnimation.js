@@ -6,7 +6,7 @@
  * @param {number} duration ms
  * @param {number} fps
  */
-import {animateDuration} from "../helpers/animate";
+import {animateProgress} from "../helpers/animate";
 
 export const animateNumber = (from = 0, to, el, duration, fps = 12) => {
   return new Promise((resolve) => {
@@ -16,7 +16,7 @@ export const animateNumber = (from = 0, to, el, duration, fps = 12) => {
 
     el.innerText = from;
 
-    animateDuration(render, 900, fps).then(() => {
+    animateProgress(render, 900, fps).then(() => {
       el.innerText = to;
       resolve();
     });
