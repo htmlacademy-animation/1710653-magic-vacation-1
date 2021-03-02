@@ -5,7 +5,7 @@ import {animateDuration, animateEasing, moveByBezier, runSerial, runSerialLoop} 
 import {preloadImage} from "../../helpers/preloadImage";
 import {bezierEasing} from "../../helpers/cubic-bezier";
 import {CanvasScene} from "./CanvasScene";
-
+import {CanvasSceneObject} from "./canvasSceneObject";
 
 const WIN_SCENE_PARAMS = {
   seaCalfWidth: 486,
@@ -32,45 +32,18 @@ export class WinScene extends CanvasScene {
   constructor(options) {
     super(options);
 
-    this.seaCalf = new Image();
-    this.tree = new Image();
-    this.tree2 = new Image();
-    this.ice = new Image();
-    this.airplane = new Image();
+    // Фомируем объекты с изображениями
+    this.seaCalf = new CanvasSceneObject(new Image(), 465, 230, 20, 1);
+    this.ice = new CanvasSceneObject(new Image(), 515, 455, 20, 1);
+    this.tree = new CanvasSceneObject(new Image(), 0, 0, 0, 0);
+    this.tree2 = new CanvasSceneObject(new Image(), 0, 0, 0, 0);
+    // Добавляем объект самолета с начальными параметрами
+    this.airplane = new CanvasSceneObject(new Image(), 0, 0, 0, 0);
+
+    // Общая картинка для снежинок
     this.snowflake = new Image();
-
-    this.seaClafT = 231;
-    this.seaClafL = 464;
-    this.iceT = 455;
-    this.iceL = 516;
-
-    this.snowflakeT = 0;
-    this.snowflakeL = 0;
-    this.snowflakeWidth = 0;
-    this.snowflakeHeight = 0;
-    this.snowflakeAngle = -12.5;
-    this.snowflakeOpacity = 0;
-
-    this.snowflake2T = 0;
-    this.snowflake2L = 0;
-    this.snowflake2Width = 0;
-    this.snowflake2Height = 0;
-    this.snowflake2Angle = -175;
-    this.snowflake2Opacity = 0;
-
-    this.sealClafAndIceAngle = 20;
-    this.iceAngle = 20;
-
-    this.treePosX = 0;
-    this.treePosY = 0;
-    this.treeWidth = 0;
-    this.treeHeight = 0;
-    this.treeOpacity = 0;
-    this.tree2PosX = 0;
-    this.tree2PosY = 0;
-    this.tree2Width = 0;
-    this.tree2Height = 0;
-    this.treeOpacity = 0;
+    this.snowflakeFirst = new CanvasSceneObject(this.snowflake, 0, 0, -12.5, 0);
+    this.snowflakeSecondary = new CanvasSceneObject(this.snowflake, 0, 0, -175, 0);
 
     this.runAnimations = [];
 
@@ -78,40 +51,15 @@ export class WinScene extends CanvasScene {
     this.cloudCircleCenterY = 0;
     this.cloudCircleRadius = 0;
 
-    this.airplanePosX = 0;
-    this.airplanePosY = 0;
-    this.airplaneAngle = 0;
-    this.airplaneOpacity = 0;
-
-    this.images = [
-      this.seaCalf.addEventListener(`load`, () => {
-      }),
-      this.tree.addEventListener(`load`, () => {
-      }),
-      this.tree2.addEventListener(`load`, () => {
-      }),
-      this.ice.addEventListener(`load`, () => {
-      }),
-      this.airplane.addEventListener(`load`, () => {
-      }),
-      this.snowflake.addEventListener(`load`, () => {
-      }),
-    ];
-
-
     this.drawScene = this.drawScene.bind(this);
     this.prepareScene();
   }
 
   /**
    * Подготовка к отрписовке сцены
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async prepareScene() {
-    this.seaClafWidth = 0;
-    this.seaClafHeight = 0;
-    this.iceWidth = 0;
-    this.iceHeight = 0;
     // Загружаем картинки
     await this.loadImages();
 
@@ -129,14 +77,14 @@ export class WinScene extends CanvasScene {
    */
   loadImages() {
     return Promise.all(
-      [
-        preloadImage(`./img/module-4/win-primary-images/sea-calf-2.png`, this.seaCalf),
-        preloadImage(`./img/module-4/win-primary-images/tree.png`, this.tree),
-        preloadImage(`./img/module-4/win-primary-images/tree 2.png`, this.tree2),
-        preloadImage(`./img/module-4/win-primary-images/ice.png`, this.ice),
-        preloadImage(`./img/module-4/win-primary-images/airplane.png`, this.airplane),
-        preloadImage(`./img/module-4/win-primary-images/snowflake.png`, this.snowflake),
-      ],
+        [
+          preloadImage(`./img/module-4/win-primary-images/sea-calf-2.png`, this.seaCalf.imageObject),
+          preloadImage(`./img/module-4/win-primary-images/tree.png`, this.tree.imageObject),
+          preloadImage(`./img/module-4/win-primary-images/tree 2.png`, this.tree2.imageObject),
+          preloadImage(`./img/module-4/win-primary-images/ice.png`, this.ice.imageObject),
+          preloadImage(`./img/module-4/win-primary-images/airplane.png`, this.airplane.imageObject),
+          preloadImage(`./img/module-4/win-primary-images/snowflake.png`, this.snowflake),
+        ],
     );
   }
 
@@ -148,7 +96,6 @@ export class WinScene extends CanvasScene {
 
     this.drawCloud();
     this.drawTree();
-
     this.drawSeaCalfOnIce();
     this.drawSnowflakes();
     this.drawAirplane();
@@ -158,16 +105,15 @@ export class WinScene extends CanvasScene {
    * Отрисовка котика на льдине
    */
   drawSeaCalfOnIce() {
-    const {ctx} = this;
+    const {ctx, seaCalf, ice, wFactor, hFactor} = this;
     ctx.globalAlpha = 1;
 
     ctx.save();
-    this.rotateCtx(this.iceAngle, this.iceL + 204, this.iceT + 84);
-    ctx.drawImage(this.ice, this.iceL, this.iceT, this.iceWidth, this.iceHeight);
-    ctx.restore();
-    ctx.save();
-    this.rotateCtx(this.sealClafAndIceAngle, this.seaClafL + 230, this.seaClafT + 307);
-    ctx.drawImage(this.seaCalf, this.seaClafL, this.seaClafT, this.seaClafWidth, this.seaClafHeight);
+    this.rotateCtx(ice.angle, ice.posX + 204 * wFactor, ice.posY + 84 * hFactor);
+    ctx.drawImage(ice.imageObject, ice.posX, ice.posY, ice.width, ice.height);
+
+    this.rotateCtx(seaCalf.angle, seaCalf.posX + 230 * wFactor, seaCalf.posY + 307 * hFactor);
+    ctx.drawImage(seaCalf.imageObject, seaCalf.posX, seaCalf.posY, seaCalf.width, seaCalf.height);
     ctx.restore();
   }
 
@@ -175,39 +121,32 @@ export class WinScene extends CanvasScene {
    * Отрписовка снежинок
    */
   drawSnowflakes() {
-    const {ctx} = this;
     const {
-      snowflakeT,
-      snowflakeL,
-      snowflakeAngle,
-      snowflake,
-      snowflakeWidth,
-      snowflakeHeight,
-      snowflakeOpacity,
-    } = this;
-    const {
-      snowflake2T,
-      snowflake2L,
-      snowflake2Angle,
-      snowflake2Width,
-      snowflake2Height,
-      snowflake2Opacity,
+      ctx,
+      snowflakeFirst,
+      snowflakeSecondary
     } = this;
 
-    // первая снежинка
-    ctx.save();
-    ctx.globalAlpha = snowflakeOpacity;
-    this.rotateCtx(snowflakeAngle, snowflakeL + snowflakeWidth * 0.5, snowflakeT + snowflakeHeight * 0.5);
-    ctx.drawImage(snowflake, snowflakeL, snowflakeT, snowflakeWidth, snowflakeHeight);
-    ctx.restore();
+    const drawSnowflake = (snowflake) => {
+      const {
+        imageObject,
+        width,
+        height,
+        posX,
+        angle,
+        posY,
+        opacity
+      } = snowflake;
 
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      this.rotateCtx(angle, posX + width * 0.5, posY + height * 0.5);
+      ctx.drawImage(imageObject, posX, posY, width, height);
+      ctx.restore();
+    };
 
-    // второая снежинка
-    ctx.save();
-    ctx.globalAlpha = snowflake2Opacity;
-    this.rotateCtx(snowflake2Angle, snowflake2L + snowflake2Width * 0.5, snowflake2T + snowflake2Height * 0.5);
-    ctx.drawImage(snowflake, snowflake2L, snowflake2T, snowflake2Width, snowflake2Height);
-    ctx.restore();
+    drawSnowflake(snowflakeFirst);
+    drawSnowflake(snowflakeSecondary);
   }
 
   /**
@@ -216,24 +155,28 @@ export class WinScene extends CanvasScene {
   drawTree() {
     const {
       tree,
-      treePosX,
-      treePosY,
-      treeWidth,
-      treeHeight,
-      treeOpacity,
       tree2,
-      tree2PosX,
-      tree2PosY,
-      tree2Width,
-      tree2Height,
       ctx,
     } = this;
 
-    ctx.save();
-    ctx.globalAlpha = treeOpacity;
-    ctx.drawImage(tree, treePosX, treePosY, treeWidth, treeHeight);
-    ctx.drawImage(tree2, tree2PosX, tree2PosY, tree2Width, tree2Height);
-    ctx.restore();
+    const drawTree = (treeObject) => {
+      const {
+        imageObject,
+        width,
+        height,
+        opacity,
+        posX,
+        posY,
+      } = treeObject;
+
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.drawImage(imageObject, posX, posY, width, height);
+      ctx.restore();
+    };
+
+    drawTree(tree);
+    drawTree(tree2);
   }
 
   /**
@@ -242,26 +185,30 @@ export class WinScene extends CanvasScene {
   drawAirplane() {
     const {
       airplane,
-      airplaneWidth,
-      airplaneHeight,
-      airplanePosX,
-      airplanePosY,
-      airplaneAngle,
-      airplaneOpacity,
       ctx,
     } = this;
 
+    const {
+      opacity,
+      posX,
+      posY,
+      angle,
+      width,
+      height,
+      imageObject
+    } = airplane;
+
     ctx.save();
-    ctx.globalAlpha = airplaneOpacity;
-    this.rotateCtx(airplaneAngle, airplanePosX + airplaneWidth * 0.5, airplanePosY + airplaneHeight * 0.5);
+    ctx.globalAlpha = opacity;
+    this.rotateCtx(angle, posX + width * 0.5, posY + height * 0.5);
 
     // нужно сдвинуть
     ctx.drawImage(
-        airplane,
-        airplanePosX + airplaneWidth * (33 / 133),
-        airplanePosY - airplaneHeight * (33 / 133),
-        airplaneWidth,
-        airplaneHeight,
+        imageObject,
+        posX + width * (33 / 133),
+        posY - height * (33 / 133),
+        width,
+        height,
     );
     ctx.restore();
 
@@ -398,18 +345,18 @@ export class WinScene extends CanvasScene {
    * Инициализация и старт анимации деревьев
    */
   animateTree() {
-    const {treePosY, hFactor} = this;
+    const {tree, wFactor} = this;
 
     const symmetricalEase = bezierEasing(0.42, 0.0, 0.58, 1.0);
 
     const animatePositionTick = (fromPosY, toPosY, fromOpacity, toOpacity) => (progress) => {
-      this.treePosY = fromPosY + progress * (toPosY - fromPosY);
-      this.treeOpacity = fromOpacity + progress * (toOpacity - fromOpacity);
+      this.tree.posY = fromPosY + progress * (toPosY - fromPosY);
+      this.tree.opacity = this.tree2.opacity = fromOpacity + progress * (toOpacity - fromOpacity);
     };
 
-    const deltaY = 50 * hFactor;
+    const deltaY = 50 * wFactor;
 
-    animateEasing(animatePositionTick(treePosY + deltaY, treePosY, 0, 1), 550, symmetricalEase);
+    animateEasing(animatePositionTick(tree.posY + deltaY, tree.posY, 0, 1), 550, symmetricalEase);
   }
 
   /**
@@ -433,20 +380,20 @@ export class WinScene extends CanvasScene {
     const airplaneMoveTick = () => (progress) => {
       const {x, y} = path(progress);
 
-      this.airplanePosX = x - this.airplaneWidth / 2;
-      this.airplanePosY = y - this.airplaneHeight / 2;
+      this.airplane.posX = x - this.airplane.width / 2;
+      this.airplane.posY = y - this.airplane.height / 2;
     };
 
     const airplaneAngleTick = (angleFrom, angleTo) => (progress) => {
-      this.airplaneAngle = angleFrom + progress * (angleTo - angleFrom);
+      this.airplane.angle = angleFrom + progress * (angleTo - angleFrom);
     };
 
     const airplaneOpacityTick = (angleFrom, angleTo) => (progress) => {
-      this.airplaneOpacity = angleFrom + progress * (angleTo - angleFrom);
+      this.airplane.opacity = angleFrom + progress * (angleTo - angleFrom);
     };
 
     animateEasing(airplaneMoveTick(), period, symmetricalEase);
-    animateEasing(airplaneOpacityTick(0,1), period * 0.25, symmetricalEase);
+    animateEasing(airplaneOpacityTick(0, 1), period * 0.25, symmetricalEase);
     runSerial([
       () => animateEasing(airplaneAngleTick(66, 50), period * 0.65, symmetricalEase),
       () => animateEasing(airplaneAngleTick(50, 9), period * 0.35, symmetricalEase),
@@ -470,29 +417,29 @@ export class WinScene extends CanvasScene {
       yDelta: 20,
     };
 
-    this.snowflakeL = snowflakePosition.x;
-    this.snowflakeT = snowflakePosition.y;
-    this.snowflake2L = snowflake2Position.x;
-    this.snowflake2T = snowflake2Position.y + snowflake2Position.yDelta;
+    this.snowflakeFirst.posX = snowflakePosition.x;
+    this.snowflakeFirst.posY = snowflakePosition.y;
+    this.snowflakeSecondary.posX = snowflake2Position.x;
+    this.snowflakeSecondary.posY = snowflake2Position.y + snowflake2Position.yDelta;
 
     const period = 4000;
 
     const symmetricalEase = bezierEasing(0.42, 0.0, 0.58, 1.0);
 
     const snowFlakeOpacityTick = (from, to) => (progress) => {
-      this.snowflakeOpacity = from + progress * (to - from);
+      this.snowflakeFirst.opacity = from + progress * (to - from);
     };
 
     const snowFlake2OpacityTick = (from, to) => (progress) => {
-      this.snowflake2Opacity = from + progress * (to - from);
+      this.snowflakeSecondary.opacity = from + progress * (to - from);
     };
 
     const snowflakePositionTick = (from, to) => (progress) => {
-      this.snowflakeT = from + progress * (to - from);
+      this.snowflakeFirst.posY = from + progress * (to - from);
     };
 
     const snowflake2PositionTick = (from, to) => (progress) => {
-      this.snowflake2T = from + progress * (to - from);
+      this.snowflakeSecondary.posY = from + progress * (to - from);
     };
 
     const snowflakeAnimations = [
@@ -510,27 +457,27 @@ export class WinScene extends CanvasScene {
 
     const snowflake2Animations = [
       () => animateEasing(
-        snowflake2PositionTick(snowflake2Position.y + snowflake2Position.yDelta, snowflake2Position.y),
-        period * 0.5,
-        symmetricalEase,
+          snowflake2PositionTick(snowflake2Position.y + snowflake2Position.yDelta, snowflake2Position.y),
+          period * 0.5,
+          symmetricalEase,
       ),
       () => animateEasing(
-        snowflake2PositionTick(snowflake2Position.y, snowflake2Position.y + snowflake2Position.yDelta),
-        period * 0.5,
-        symmetricalEase,
+          snowflake2PositionTick(snowflake2Position.y, snowflake2Position.y + snowflake2Position.yDelta),
+          period * 0.5,
+          symmetricalEase,
       ),
     ];
 
     animateEasing(snowFlakeOpacityTick(0, 1), 650, symmetricalEase).then(
-      () => {
-        runSerialLoop(snowflakeAnimations);
-      },
+        () => {
+          runSerialLoop(snowflakeAnimations);
+        },
     );
 
     animateEasing(snowFlake2OpacityTick(0, 1), 1000, symmetricalEase).then(
-      () => {
-        runSerialLoop(snowflake2Animations);
-      },
+        () => {
+          runSerialLoop(snowflake2Animations);
+        },
     );
   }
 
@@ -539,19 +486,19 @@ export class WinScene extends CanvasScene {
    */
   animateSeaCalf() {
     const showAnimationSeaCalfTick = (fromY, toY, fromAngle, toAngle) => (progress) => {
-      this.seaClafT = fromY + progress * (toY - fromY);
-      this.sealClafAndIceAngle = fromAngle + progress * (toAngle - fromAngle);
+      this.seaCalf.posY = fromY + progress * (toY - fromY);
+      this.seaCalf.angle = fromAngle + progress * (toAngle - fromAngle);
     };
 
     const showAnimationIceTick = (fromY, toY, fromAngle, toAngle) => (progress) => {
-      this.iceT = fromY + progress * (toY - fromY);
-      this.iceAngle = fromAngle + progress * (toAngle - fromAngle);
+      this.ice.posY = fromY + progress * (toY - fromY);
+      this.ice.angle = fromAngle + progress * (toAngle - fromAngle);
     };
 
-    const moveSeaCalfFrom = 637 * this.hFactor;
-    const moveSeaCalTo = 232 * this.hFactor;
-    const moveIceFrom = 860 * this.hFactor;
-    const moveIceTo = 456 * this.hFactor;
+    const moveSeaCalfFrom = 637 * this.wFactor;
+    const moveSeaCalTo = 232 * this.wFactor;
+    const moveIceFrom = 860 * this.wFactor;
+    const moveIceTo = 456 * this.wFactor;
     const period = 1600;
     const yDelta = 20;
 
@@ -581,30 +528,36 @@ export class WinScene extends CanvasScene {
    * Обновление размеров котика и льдины
    */
   updateSeaCalfAndIceSizing() {
-    const {wFactor, hFactor} = this;
-    this.seaClafWidth = WIN_SCENE_PARAMS.seaCalfWidth * wFactor;
-    this.seaClafHeight = this.seaClafWidth * this.seaCalf.height / this.seaCalf.width;
+    const {wFactor, hFactor, seaCalf, ice} = this;
 
-    this.iceWidth = WIN_SCENE_PARAMS.iceWidth * wFactor;
-    this.iceHeight = this.iceWidth * this.ice.height / this.ice.width;
+    const seaClafWidth = WIN_SCENE_PARAMS.seaCalfWidth * wFactor;
+    const seaClafHeight = seaClafWidth * seaCalf.aspectRatio;
 
-    this.seaClafT = 637 * hFactor;
-    this.seaClafL = 464 * wFactor;
-    this.iceT = 860 * hFactor;
-    this.iceL = 516 * wFactor;
+    seaCalf.setDimensions(seaClafWidth, seaClafHeight);
+    this.seaCalf.posX = 464 * wFactor;
+    this.seaCalf.posY = 637 * hFactor;
+
+    const iceWidth = WIN_SCENE_PARAMS.iceWidth * wFactor;
+    const iceHeight = iceWidth * ice.aspectRatio;
+
+    ice.setDimensions(iceWidth, iceHeight);
+    this.ice.posX = 516 * wFactor;
+    this.ice.posY = 860 * hFactor;
   }
 
   /**
    * Обновление размеров снежинок
    */
   updateSnowflakesSizing() {
-    const {wFactor} = this;
+    const {wFactor, snowflakeFirst, snowflakeSecondary} = this;
 
-    this.snowflakeWidth = WIN_SCENE_PARAMS.snowflakeWidth * wFactor;
-    this.snowflakeHeight = this.snowflakeWidth * this.snowflake.height / this.snowflake.width;
+    const widthFirst = WIN_SCENE_PARAMS.snowflakeWidth * wFactor;
+    const heightFirst = widthFirst * snowflakeFirst.aspectRatio;
+    this.snowflakeFirst.setDimensions(widthFirst, heightFirst);
 
-    this.snowflake2Width = WIN_SCENE_PARAMS.snowflake2Width * wFactor;
-    this.snowflake2Height = this.snowflake2Width * this.snowflake.height / this.snowflake.width;
+    const widthSecond = WIN_SCENE_PARAMS.snowflake2Width * wFactor;
+    const heightSecond = widthSecond * snowflakeSecondary.aspectRatio;
+    this.snowflakeSecondary.setDimensions(widthSecond, heightSecond);
   }
 
   /**
@@ -613,28 +566,37 @@ export class WinScene extends CanvasScene {
   updateAirplaneSizing() {
     const {wFactor, airplane} = this;
 
-    this.airplaneWidth = WIN_SCENE_PARAMS.airplaneWidth * wFactor;
-    this.airplaneHeight = this.airplaneWidth * airplane.height / airplane.width;
+    const width = WIN_SCENE_PARAMS.airplaneWidth * wFactor;
+    const height = width * airplane.imageObject.height / airplane.imageObject.width;
+
+    this.airplane.setDimensions(width, height);
   }
 
   /**
    * Обновление размеров елок
    */
   updateTreeSizing() {
-    const {wFactor, hFactor, tree, tree2} = this;
+    const {wFactor, tree, tree2} = this;
 
-    this.treePosX = 802 * wFactor;
-    this.treePosY = 364 * hFactor;
-    this.treeWidth = WIN_SCENE_PARAMS.treeWidth * wFactor;
-    this.treeHeight = this.treeWidth * tree.height / tree.width;
-    this.tree2PosX = 840 * wFactor;
-    this.tree2PosY = 422 * hFactor;
-    this.tree2Width = WIN_SCENE_PARAMS.tree2Width * wFactor;
-    this.tree2Height = this.tree2Width * tree2.height / tree2.width;
+    const treeWidth = WIN_SCENE_PARAMS.treeWidth * wFactor;
+    const treeHeight = treeWidth * tree.aspectRatio;
+
+    tree.setDimensions(treeWidth, treeHeight);
+    tree.posX = 802 * wFactor;
+    tree.posY = 364 * wFactor;
+
+    const tree2Width = WIN_SCENE_PARAMS.tree2Width * wFactor;
+    const tree2Height = tree2Width * tree2.aspectRatio;
+
+    tree2.setDimensions(tree2Width, tree2Height);
+    tree2.posX = 840 * wFactor;
+    tree2.posY = 422 * wFactor;
   }
 
   /**
    * Основной цикл анимации сцены, отслеживает запуск по сценарию
+   *
+   * @param globalProgress
    */
   globalAnimationTick(globalProgress) {
     const seaCalfAnimationDelay = 0;
