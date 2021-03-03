@@ -80,8 +80,8 @@ export class FailedScene extends CanvasScene {
     this.snowflake = new CanvasSceneObject(new Image(), this.vw, 0, 0, 0);
     this.leaf = new CanvasSceneObject(new Image(), this.vw, 0, 0, 0);
     this.crocodile = new CanvasSceneObject(new Image(), this.vw, 0, 0, 0);
-    this.key = new CanvasSceneObject(new Image(), 635, 290, 0, 0);
-    this.tears = new CanvasSceneObject(new Image(), 672 * this.wFactor, 290, 0, 0);
+    this.key = new CanvasSceneObject(new Image(), 635 * this.wFactor, 290 * this.wFactor, 0, 0);
+    this.tears = new CanvasSceneObject(new Image(), 672 * this.wFactor, 290 * this.wFactor, 0, 0);
 
     this.drawScene = this.drawScene.bind(this);
 
