@@ -61359,8 +61359,8 @@ class FailedScene extends _CanvasScene__WEBPACK_IMPORTED_MODULE_0__["CanvasScene
     this.snowflake = new _canvasSceneObject__WEBPACK_IMPORTED_MODULE_1__["CanvasSceneObject"](new Image(), this.vw, 0, 0, 0);
     this.leaf = new _canvasSceneObject__WEBPACK_IMPORTED_MODULE_1__["CanvasSceneObject"](new Image(), this.vw, 0, 0, 0);
     this.crocodile = new _canvasSceneObject__WEBPACK_IMPORTED_MODULE_1__["CanvasSceneObject"](new Image(), this.vw, 0, 0, 0);
-    this.key = new _canvasSceneObject__WEBPACK_IMPORTED_MODULE_1__["CanvasSceneObject"](new Image(), 635, 290, 0, 0);
-    this.tears = new _canvasSceneObject__WEBPACK_IMPORTED_MODULE_1__["CanvasSceneObject"](new Image(), 672 * this.wFactor, 290, 0, 0);
+    this.key = new _canvasSceneObject__WEBPACK_IMPORTED_MODULE_1__["CanvasSceneObject"](new Image(), 635 * this.wFactor, 290 * this.wFactor, 0, 0);
+    this.tears = new _canvasSceneObject__WEBPACK_IMPORTED_MODULE_1__["CanvasSceneObject"](new Image(), 672 * this.wFactor, 290 * this.wFactor, 0, 0);
 
     this.drawScene = this.drawScene.bind(this);
 
