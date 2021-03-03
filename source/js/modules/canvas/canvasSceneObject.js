@@ -9,6 +9,7 @@ export class CanvasSceneObject {
    * @param {number} posY
    * @param {number} angle
    * @param {number} opacity
+   * @param {number} scale
    */
   constructor(
       imageObject = null,
@@ -16,6 +17,7 @@ export class CanvasSceneObject {
       posY = 0,
       angle = 0,
       opacity = 1,
+      scale = 1
   ) {
     this.imageObject = imageObject;
     this.posX = posX;
@@ -24,6 +26,7 @@ export class CanvasSceneObject {
     this.opacity = opacity;
     this.width = 0;
     this.height = 0;
+    this.scale = scale;
 
     if (this.imageObject) {
       this.imageObject.addEventListener(`load`, this.setAspectRatio.bind(this));
@@ -35,7 +38,7 @@ export class CanvasSceneObject {
    */
   setAspectRatio() {
     const {width, height} = this.imageObject;
-    this.aspectRatio = height / width ;
+    this.aspectRatio = height / width;
   }
 
   /**

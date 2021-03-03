@@ -1,5 +1,6 @@
 import game from "./game";
 import runWinScene from "./canvas/winScene";
+import runFailedScene from "./canvas/failedScene";
 
 export default () => {
   let showResultEls = document.querySelectorAll(`.js-show-result`);
@@ -23,6 +24,7 @@ export default () => {
         // запускаем анимацию canvas
         switch (target) {
           case `result` : runWinScene(); break;
+          case `result3` : runFailedScene(); break;
         }
 
         setTimeout(() => {
