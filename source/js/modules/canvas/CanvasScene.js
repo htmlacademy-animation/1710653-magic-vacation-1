@@ -11,6 +11,7 @@ export class CanvasScene {
     this.canvas.width = this.vw;
     this.canvas.height = this.vh;
     this.duration = options.duration;
+    this.runAnimations = [];
 
     document.querySelector(options.el).appendChild(this.canvas);
     window.addEventListener(`resize`, this.updateSceneSize.bind(this));
@@ -57,7 +58,6 @@ export class CanvasScene {
     // eslint-disable-next-line no-console
     console.log(`start animation!`);
 
-    this.drawScene();
     return animateDuration(this.globalAnimationTick.bind(this), duration, 60);
   }
 
