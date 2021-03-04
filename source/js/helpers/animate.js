@@ -124,3 +124,10 @@ export const moveByBezier = (
     y: bezier(y1, y2, y3, y4)(t)
   };
 };
+
+/**
+ * Создание паузы
+ * @param delay
+ * @return {Promise<>}
+ */
+export const delay = (delay) => new Promise((resolve) => setTimeout(resolve, delay));

@@ -8,9 +8,10 @@ export class CanvasScene {
 
     this.ctx = this.canvas.getContext(`2d`);
 
-    this.canvas.width = this.ww;
-    this.canvas.height = this.wh;
+    this.canvas.width = this.vw;
+    this.canvas.height = this.vh;
     this.duration = options.duration;
+    this.runAnimations = [];
 
     document.querySelector(options.el).appendChild(this.canvas);
     window.addEventListener(`resize`, this.updateSceneSize.bind(this));
@@ -36,16 +37,16 @@ export class CanvasScene {
    * Очистка холста
    */
   clear() {
-    const {ww, wh} = this;
-    this.ctx.clearRect(0, 0, ww, wh);
+    const {vw, vh} = this;
+    this.ctx.clearRect(0, 0, vw, vh);
   }
 
   updateSceneSize() {
-    this.ww = window.innerWidth;
-    this.wh = window.innerHeight;
-    this.aspectRation = this.ww / this.wh;
-    this.wFactor = this.ww / 1440;
-    this.hFactor = this.wh / 760;
+    this.vw = window.innerWidth;
+    this.vh = window.innerHeight;
+    this.aspectRation = this.vh / this.vw;
+    this.wFactor = this.vw / 1440;
+    this.hFactor = this.vh / 760;
   }
 
   /**
@@ -57,7 +58,6 @@ export class CanvasScene {
     // eslint-disable-next-line no-console
     console.log(`start animation!`);
 
-    this.drawScene();
     return animateDuration(this.globalAnimationTick.bind(this), duration, 60);
   }
 
