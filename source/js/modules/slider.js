@@ -2,8 +2,6 @@ import Swiper from "swiper";
 
 export default () => {
   let storySlider;
-  let sliderContainer = document.getElementById(`story`);
-  sliderContainer.style.backgroundImage = `url("img/slide1.jpg"), linear-gradient(180deg, rgba(83, 65, 118, 0) 0%, #523E75 16.85%)`;
 
   const ThemeSlidesByIndex = [
     `--purple`,
@@ -33,15 +31,34 @@ export default () => {
         },
         on: {
           slideChange: () => {
-            if (storySlider.activeIndex === 0 || storySlider.activeIndex === 1) {
-              sliderContainer.style.backgroundImage = `url("img/slide1.jpg"), linear-gradient(180deg, rgba(83, 65, 118, 0) 0%, #523E75 16.85%)`;
-            } else if (storySlider.activeIndex === 2 || storySlider.activeIndex === 3) {
-              sliderContainer.style.backgroundImage = `url("img/slide2.jpg"), linear-gradient(180deg, rgba(45, 54, 179, 0) 0%, #2A34B0 16.85%)`;
-            } else if (storySlider.activeIndex === 4 || storySlider.activeIndex === 5) {
-              sliderContainer.style.backgroundImage = `url("img/slide3.jpg"), linear-gradient(180deg, rgba(92, 138, 198, 0) 0%, #5183C4 16.85%)`;
-            } else if (storySlider.activeIndex === 6 || storySlider.activeIndex === 7) {
-              sliderContainer.style.backgroundImage = `url("img/slide4.jpg"), linear-gradient(180deg, rgba(45, 39, 63, 0) 0%, #2F2A42 16.85%)`;
+            let sceneIndex = 0;
+
+            switch (storySlider.activeIndex) {
+              case 0:
+              case 1:
+                sceneIndex = 1;
+                break;
+              case 2:
+              case 3:
+                sceneIndex = 2;
+                break;
+              case 4:
+              case 5:
+                sceneIndex = 3;
+                break;
+              case 6:
+              case 7:
+                sceneIndex = 4;
+                break;
             }
+
+            const event = new CustomEvent(`slideChanged`, {
+              detail: {
+                'scene': `SCENE_${sceneIndex}`,
+              },
+            });
+
+            document.body.dispatchEvent(event);
 
             setPageTheme();
           },
@@ -70,15 +87,34 @@ export default () => {
         },
         on: {
           slideChange: () => {
-            if (storySlider.activeIndex === 0) {
-              sliderContainer.style.backgroundImage = `url("img/slide1.jpg")`;
-            } else if (storySlider.activeIndex === 2) {
-              sliderContainer.style.backgroundImage = `url("img/slide2.jpg")`;
-            } else if (storySlider.activeIndex === 4) {
-              sliderContainer.style.backgroundImage = `url("img/slide3.jpg")`;
-            } else if (storySlider.activeIndex === 6) {
-              sliderContainer.style.backgroundImage = `url("img/slide4.jpg")`;
+            let sceneIndex = 0;
+
+            switch (storySlider.activeIndex) {
+              case 0:
+              case 1:
+                sceneIndex = 1;
+                break;
+              case 2:
+              case 3:
+                sceneIndex = 2;
+                break;
+              case 4:
+              case 5:
+                sceneIndex = 3;
+                break;
+              case 6:
+              case 7:
+                sceneIndex = 4;
+                break;
             }
+
+            const event = new CustomEvent(`slideChanged`, {
+              detail: {
+                'scene': `SCENE_${sceneIndex}`,
+              },
+            });
+
+            document.body.dispatchEvent(event);
 
             setPageTheme();
           },
@@ -94,6 +130,7 @@ export default () => {
 
   document.body.addEventListener(`screenChanged`, (event) => {
     if (storySlider && event.detail.screenName === `story`) {
+      storySlider.slideTo(0, 0); // ресетим первый слайд, чтобы потом не заморачиваться с отслеживанием слайда и переключения сцены
       setPageTheme();
     } else {
       resetPageTheme();

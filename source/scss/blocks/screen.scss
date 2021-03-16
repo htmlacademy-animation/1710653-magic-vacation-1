@@ -371,19 +371,10 @@ $screenBackgroundAnimationSeconds: 0.25s;
 }
 
 .screen--story {
-  background-color: $c-dark;
-  background-image: url("../img/slide1.jpg"), url("../img/slide2.jpg"), url("../img/slide3.jpg"), url("../img/slide4.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-
-  @media (orientation: portrait) {
-    background-size: auto calc(100vh - 13.8rem), 100% 25rem;
-    background-position: top center, bottom center;
-  }
 }
 
 .screen--prizes {
+  background-color: $c-dark;
 }
 
 .screen--game {
@@ -431,6 +422,7 @@ $screenBackgroundAnimationSeconds: 0.25s;
     pointer-events: auto;
   }
 }
+
 
 .screen--rules {
   background-color: $c-dark;
