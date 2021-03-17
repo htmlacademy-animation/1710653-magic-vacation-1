@@ -10,6 +10,7 @@ import social from './modules/social.js';
 import FullPageScroll from './modules/full-page-scroll';
 import pageLoadingSteps from './modules/page-loading-steps';
 import screens from "./modules/screens";
+import backgroundWebGlControllerFactory from "./modules/webGL/index";
 
 // init modules
 pageLoadingSteps();
@@ -22,6 +23,7 @@ result();
 form();
 social();
 screens();
+backgroundWebGlControllerFactory();
 
 const fullPageScroll = new FullPageScroll();
 fullPageScroll.init();
