@@ -1,4 +1,5 @@
 import * as THREE from "three/src/Three";
+import {getEffectMaterial} from "./customShader";
 
 /**
  * Контроллер переключения и запуска сцен
@@ -22,11 +23,16 @@ export class BackgroundSceneController {
 
     // создаем камеру
     const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 10000);
-    camera.position.z = 200;
+    camera.position.z = 400;
     this.camera = camera;
 
     // Создаем рендерер с альфа каналом и задаем ему цвет очиски фона
-    const renderer = new THREE.WebGLRenderer({alpha: true});
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: false,
+      logarithmicDepthBuffer: false,
+      powerPreference: `high-performance`
+    });
     const color = new THREE.Color(0xEEEEEE);
     const alpha = 0.0;
 
@@ -97,22 +103,9 @@ export class BackgroundSceneController {
       textureLoader.load(`./img/module-5/scenes-textures/scene-4.png`),
     ]);
 
-    // форма сцены
-    const scenePoints = [
-      new THREE.Vector2(0, 0),
-      new THREE.Vector2(400, 0),
-      new THREE.Vector2(400, 200),
-      new THREE.Vector2(0, 200),
-      new THREE.Vector2(0, 0),
-    ];
-
-    const sceneShape = new THREE.Shape(scenePoints);
-
-    const geometryScene = new THREE.ShapeGeometry(sceneShape);
-
     // Формируем коллекцию сцен
     this.scenes = textures.reduce((obj, texture, index) => {
-      obj[`SCENE_${index}`] = this.addScene(texture, geometryScene);
+      obj[`SCENE_${index}`] = this.addScene(texture);
       return obj;
     }, {});
   }
@@ -120,21 +113,25 @@ export class BackgroundSceneController {
   /**
    * Добавление сцены с нужной текстурой
    * @param {THREE.Texture} texture
-   * @param {THREE.Geometry} geometryScene
    * @return {Mesh}
    */
-  addScene(texture, geometryScene) {
-    texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-    texture.repeat.set(0.0025, 0.005);
+  addScene(texture) {
+    // texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+    // texture.repeat.set(0.0025, 0.005);
 
-    const mesh = new THREE.Mesh(geometryScene, new THREE.MeshBasicMaterial({side: THREE.DoubleSide, map: texture}));
+    const material = getEffectMaterial(texture, 4);
+    const plane = getPlaneLayer(material, 1440, 760);
+    // TODO: Спросить почему не работает текстура при таком решении создании меша
+    /* const mesh = new THREE.Mesh(geometryScene, material);
     mesh.position.set(-200, -100, 0);
+    // mesh.rotateX(270);
 
+    mesh.visible = false;*/
     // Скрываем вначале все сцены
-    mesh.visible = false;
-    this.scene.add(mesh);
+    plane.visible = false;
+    this.scene.add(plane);
 
-    return mesh;
+    return plane;
   }
 
   /**
@@ -194,6 +191,15 @@ const backgroundWebGlControllerFactory = async () => {
   }
 
   return backgroundWebGlController;
+};
+
+const getPlaneLayer = (material, width, height) => {
+  const geometry = new THREE.PlaneBufferGeometry(width, height);
+  const plane = new THREE.Mesh(geometry, material);
+
+  material.needsUpdate = true;
+
+  return plane;
 };
 
 export default backgroundWebGlControllerFactory;
