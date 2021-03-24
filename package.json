@@ -10,6 +10,7 @@
     "csso-webpack-plugin": "2.0.0-beta.1",
     "eslint": "6.5.1",
     "eslint-config-htmlacademy": "0.5.2",
+    "glsl-shader-loader": "^0.1.6",
     "gulp": "4.0.x",
     "gulp-imagemin": "5.0.3",
     "gulp-rename": "1.4.0",

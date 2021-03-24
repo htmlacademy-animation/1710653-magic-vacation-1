@@ -1,5 +1,5 @@
 import * as THREE from "three/src/Three";
-import {getEffectMaterial} from "./customShader";
+import {getHueShiftMaterial} from "./shaders/hueShift/hueShader";
 
 /**
  * Контроллер переключения и запуска сцен
@@ -116,17 +116,12 @@ export class BackgroundSceneController {
    * @return {Mesh}
    */
   addScene(texture) {
-    // texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-    // texture.repeat.set(0.0025, 0.005);
-
-    const material = getEffectMaterial(texture, 4);
+    const material = getHueShiftMaterial(texture, -5 * Math.PI / 180);
     const plane = getPlaneLayer(material, 1440, 760);
     // TODO: Спросить почему не работает текстура при таком решении создании меша
     /* const mesh = new THREE.Mesh(geometryScene, material);
     mesh.position.set(-200, -100, 0);
-    // mesh.rotateX(270);
-
-    mesh.visible = false;*/
+    // mesh.rotateX(270);*/
     // Скрываем вначале все сцены
     plane.visible = false;
     this.scene.add(plane);
