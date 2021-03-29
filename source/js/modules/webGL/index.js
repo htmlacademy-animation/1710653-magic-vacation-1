@@ -1,5 +1,8 @@
 import * as THREE from "three/src/Three";
 import {getHueShiftMaterial} from "./shaders/hueShift/hueShader";
+import {geGrayScaleMaterial} from "./shaders/grayScale/grayScale";
+import {geMagnifierMaterial} from "./shaders/magnifier/magnifier";
+import {getHueShiftAndMagnifier} from "./shaders/hueShiftAndMagnifier/hueShiftAndMagnifier";
 
 /**
  * Контроллер переключения и запуска сцен
@@ -31,7 +34,7 @@ export class BackgroundSceneController {
       alpha: true,
       antialias: false,
       logarithmicDepthBuffer: false,
-      powerPreference: `high-performance`
+      powerPreference: `high-performance`,
     });
     const color = new THREE.Color(0xEEEEEE);
     const alpha = 0.0;
@@ -116,7 +119,24 @@ export class BackgroundSceneController {
    * @return {Mesh}
    */
   addScene(texture) {
-    const material = getHueShiftMaterial(texture, -5 * Math.PI / 180);
+    // const material = getHueShiftMaterial(texture, -5 * Math.PI / 180);
+    // const material = geGrayScaleMaterial(texture, 0.5);
+    const bubbles = [
+      {
+        center: new THREE.Vector2(500, 100),
+        radius: 60,
+      },
+      {
+        center: new THREE.Vector2(750, 200),
+        radius: 80,
+      },
+      {
+        center: new THREE.Vector2(800, 400),
+        radius: 70,
+      },
+    ];
+    const material = getHueShiftAndMagnifier(texture, -5 * Math.PI / 180, bubbles);
+
     const plane = getPlaneLayer(material, 1440, 760);
     // TODO: Спросить почему не работает текстура при таком решении создании меша
     /* const mesh = new THREE.Mesh(geometryScene, material);
@@ -152,6 +172,8 @@ export class BackgroundSceneController {
     this.currentScene = this.scenes[id];
 
     this.currentScene.visible = true;
+
+    console.log(this.currentScene);
   }
 
   /**
@@ -160,10 +182,24 @@ export class BackgroundSceneController {
   loop() {
     const {renderer, scene, camera} = this;
 
-    const animate = () => {
+    const startX = 500;
+    const animate = (props) => {
       requestAnimationFrame(animate);
 
       renderer.render(scene, camera);
+
+
+      /*  if (this.currentScene.material.uniforms.bubleRadius.value < 500) {
+          this.currentScene.material.uniforms.bubleRadius.value++
+        }*/
+
+      if (this.currentScene.material.uniforms.bubbles.value[0].center.y >= 1000) {
+        this.currentScene.material.uniforms.bubbles.value[0].center.setY(0);
+      } else {
+        const x = Math.sin(props / 800) * 100;
+        this.currentScene.material.uniforms.bubbles.value[0].center.setX(startX - x);
+        this.currentScene.material.uniforms.bubbles.value[0].center.setY(this.currentScene.material.uniforms.bubbles.value[0].center.y + 4);
+      }
     };
 
     animate();
