@@ -3,6 +3,7 @@ precision mediump float;
 struct buble {
   vec2 center;
   float radius;
+
 };
 
 uniform sampler2D map;
@@ -40,7 +41,7 @@ vec3 hsv2rgb(vec3 c)
 void main() {
   vec2 uV = vUv; // TODO: Что за переменная vUv? в чем ее отличие от gl_FragCoord.xy ?
   vec4 texel = texture2D( map, uV );
-// TODO: как сделать чтобы был нормально при адаптиве ?
+  // TODO: как сделать чтобы был нормально при адаптиве ?
   vec4 VergeColor = vec4(1,1, 0,1);
   float mixColorRate = 0.0;
   // Проходим по линзам
@@ -61,12 +62,12 @@ void main() {
         vec2 p = gl_FragCoord.xy - center.xy;
 
         float deg = degrees(atan(p.x, p.y));
-        if ( (deg >= -80. && deg <= -10.) &&  (lens_dist >= radius * 0.8 && lens_dist <= radius * 0.85 )) {
+        if ( (deg >= -50. && deg <= -10.) &&  (lens_dist >= radius * 0.8 && lens_dist <= radius * 0.85 )) {
           mixColorRate = 0.15;
         }
       }
 
-      if (lens_dist <= radius + 2. && lens_dist > radius)
+      if (lens_dist <= radius * 1.05 && lens_dist > radius)
       {
         mixColorRate = 0.15;
       }
