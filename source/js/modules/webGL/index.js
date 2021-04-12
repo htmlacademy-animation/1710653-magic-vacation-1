@@ -32,7 +32,7 @@ export class BackgroundSceneController {
     // Создаем рендерер с альфа каналом и задаем ему цвет очиски фона
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: false,
+      antialias: true,
       logarithmicDepthBuffer: false,
       powerPreference: `high-performance`,
     });
@@ -40,7 +40,8 @@ export class BackgroundSceneController {
     const alpha = 0.0;
 
     renderer.setClearColor(color, alpha);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.autoClear = false;
     this.renderer = renderer;
 
     this.updateCanvasSize();
@@ -123,7 +124,7 @@ export class BackgroundSceneController {
     // const material = geGrayScaleMaterial(texture, 0.5);
     const bubbles = [
       {
-        center: new THREE.Vector2(500, 100),
+        center: new THREE.Vector2(300, 500),
         radius: 60,
       },
       {

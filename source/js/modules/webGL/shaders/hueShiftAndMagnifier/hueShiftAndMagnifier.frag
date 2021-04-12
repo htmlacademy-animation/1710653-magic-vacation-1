@@ -3,6 +3,7 @@ precision mediump float;
 struct buble {
   vec2 center;
   float radius;
+
 };
 
 uniform sampler2D map;
@@ -35,28 +36,46 @@ vec3 hsv2rgb(vec3 c)
   return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-void main() {
-  vec4 texel = texture2D( map, vUv );
 
+
+void main() {
+  vec2 uV = vUv; // TODO: Что за переменная vUv? в чем ее отличие от gl_FragCoord.xy ?
+  vec4 texel = texture2D( map, uV );
+  // TODO: как сделать чтобы был нормально при адаптиве ?
+  vec4 VergeColor = vec4(1,1, 0,1);
+  float mixColorRate = 0.0;
   // Проходим по линзам
   for (int i = 0; i < 3; i++ ) {
+    vec2 center;
+    float radius;
     // я хз почему не пашет проверка :) TODO: Спросить у наставника
     if (i < bubblesCount && hasBubble) {
-      vec2 center =  bubbles[i].center;
-      float radius = bubbles[i].radius;
+      center =  bubbles[i].center ;
+      radius = bubbles[i].radius;
       float lens_dist = distance(gl_FragCoord.xy, center.xy);
 
       if (lens_dist < radius)
       {
         float h = sqrt(1. - pow(lens_dist /  radius , 2.0));
 
-        texel = texture2D(map, vUv - (vUv - center.xy) / 50000. / h );
+        texel = texture2D(map, uV - (uV - center.xy) / 50000. / h );
+        vec2 p = gl_FragCoord.xy - center.xy;
+
+        float deg = degrees(atan(p.x, p.y));
+        if ( (deg >= -50. && deg <= -10.) &&  (lens_dist >= radius * 0.8 && lens_dist <= radius * 0.85 )) {
+          mixColorRate = 0.15;
+        }
+      }
+
+      if (lens_dist <= radius * 1.05 && lens_dist > radius)
+      {
+        mixColorRate = 0.15;
       }
     }
   }
 
   vec3 hsv = rgb2hsv(texel.rgb);
   hsv.x = fract(hsv.x + shift);
-  gl_FragColor.rgb = hsv2rgb(hsv);
-  gl_FragColor.a = 1.0;
+  vec3 hueColor = hsv2rgb(hsv);
+  gl_FragColor = mix(vec4(hueColor.rgb , 1), VergeColor, mixColorRate) ;
 }
