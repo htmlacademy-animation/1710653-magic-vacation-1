@@ -42,7 +42,7 @@ void main() {
   vec2 uV = vUv; // TODO: Что за переменная vUv? в чем ее отличие от gl_FragCoord.xy ?
   vec4 texel = texture2D( map, uV );
   // TODO: как сделать чтобы был нормально при адаптиве ?
-  vec4 VergeColor = vec4(1,1, 0,1);
+  vec4 VergeColor = vec4(1,1,1,1);
   float mixColorRate = 0.0;
   // Проходим по линзам
   for (int i = 0; i < 3; i++ ) {
