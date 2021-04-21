@@ -1,8 +1,7 @@
 import * as THREE from "three/src/Three";
-import {getHueShiftMaterial} from "./shaders/hueShift/hueShader";
-import {geGrayScaleMaterial} from "./shaders/grayScale/grayScale";
-import {geMagnifierMaterial} from "./shaders/magnifier/magnifier";
 import {getHueShiftAndMagnifier} from "./shaders/hueShiftAndMagnifier/hueShiftAndMagnifier";
+import {animateEasing, runSerial} from "../../helpers/animate";
+import {getRandomInRange} from "../../helpers/RandomInRange";
 
 /**
  * Контроллер переключения и запуска сцен
@@ -40,7 +39,7 @@ export class BackgroundSceneController {
     const alpha = 0.0;
 
     renderer.setClearColor(color, alpha);
-    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.autoClear = false;
     this.renderer = renderer;
 
@@ -65,7 +64,6 @@ export class BackgroundSceneController {
     } else {
       this.setVisibleScene(`SCENE_0`);
     }
-
     this.loop();
   }
 
@@ -109,7 +107,7 @@ export class BackgroundSceneController {
 
     // Формируем коллекцию сцен
     this.scenes = textures.reduce((obj, texture, index) => {
-      obj[`SCENE_${index}`] = this.addScene(texture);
+      obj[`SCENE_${index}`] = index === 2 ? this.addUnderWaterScene(texture) : this.addScene(texture);
       return obj;
     }, {});
   }
@@ -119,7 +117,19 @@ export class BackgroundSceneController {
    * @param {THREE.Texture} texture
    * @return {Mesh}
    */
-  addScene(texture) {
+  addScene(texture,) {
+
+    const material = new THREE.MeshBasicMaterial({map: texture});
+    const plane = getPlaneLayer(material, 1440, 760);
+
+    // Скрываем вначале все сцены
+    plane.visible = false;
+    this.scene.add(plane);
+
+    return plane;
+  }
+
+  addUnderWaterScene(texture,) {
     // const material = getHueShiftMaterial(texture, -5 * Math.PI / 180);
     // const material = geGrayScaleMaterial(texture, 0.5);
     const bubbles = [
@@ -136,18 +146,41 @@ export class BackgroundSceneController {
         radius: 70,
       },
     ];
-    const material = getHueShiftAndMagnifier(texture, -5 * Math.PI / 180, bubbles);
+
+    const material = getHueShiftAndMagnifier(texture, 0, bubbles);
 
     const plane = getPlaneLayer(material, 1440, 760);
-    // TODO: Спросить почему не работает текстура при таком решении создании меша
-    /* const mesh = new THREE.Mesh(geometryScene, material);
-    mesh.position.set(-200, -100, 0);
-    // mesh.rotateX(270);*/
+
     // Скрываем вначале все сцены
     plane.visible = false;
     this.scene.add(plane);
 
     return plane;
+  }
+
+  runHueShiftAnimation() {
+    if (!this.currentSceneId === `SCENE_2`) {
+      return;
+    }
+
+    const timeFunction = (x) => {
+      return 1 - (1 - x) ** 3;
+    };
+
+    const animateHueTick = (start, end) => (progress) => {
+      this.scenes[`SCENE_2`].material.uniforms.shift.value = (start + progress * (end - start)) * Math.PI / 180;
+    };
+
+    const timeDuration = 1500;
+    const firstTime = Math.floor(getRandomInRange(0.4, 0.7) * timeDuration);
+    const secondTime = timeDuration - firstTime;
+
+    const shiftValue = getRandomInRange(1, 4);
+
+    runSerial([
+      () => animateEasing(animateHueTick(0, shiftValue), firstTime, timeFunction),
+      () => animateEasing(animateHueTick(shiftValue, 0), secondTime, timeFunction),
+    ]).then(this.runHueShiftAnimation.bind(this));
   }
 
   /**
@@ -170,11 +203,16 @@ export class BackgroundSceneController {
       return;
     }
 
+    this.currentSceneId = id;
     this.currentScene = this.scenes[id];
 
-    this.currentScene.visible = true;
+    switch (id) {
+      case `SCENE_2`:
+        this.runHueShiftAnimation();
+        break;
+    }
 
-    console.log(this.currentScene);
+    this.currentScene.visible = true;
   }
 
   /**
@@ -188,24 +226,12 @@ export class BackgroundSceneController {
       requestAnimationFrame(animate);
 
       renderer.render(scene, camera);
-
-
-      /*  if (this.currentScene.material.uniforms.bubleRadius.value < 500) {
-          this.currentScene.material.uniforms.bubleRadius.value++
-        }*/
-
-      if (this.currentScene.material.uniforms.bubbles.value[0].center.y >= 1000) {
-        this.currentScene.material.uniforms.bubbles.value[0].center.setY(0);
-      } else {
-        const x = Math.sin(props / 800) * 100;
-        this.currentScene.material.uniforms.bubbles.value[0].center.setX(startX - x);
-        this.currentScene.material.uniforms.bubbles.value[0].center.setY(this.currentScene.material.uniforms.bubbles.value[0].center.y + 4);
-      }
     };
 
     animate();
   }
 }
+
 
 let backgroundWebGlController;
 
